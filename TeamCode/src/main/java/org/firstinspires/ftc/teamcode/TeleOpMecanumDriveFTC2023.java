@@ -147,14 +147,14 @@ public class TeleOpMecanumDriveFTC2023 extends OpMode{
 
     public void loop() {
         double left1y;
-        double left1x;
+
         double right1x;
         double servoValue;
         boolean limitSwitchOne;
 
         // Run wheels in tank mode (note: The joystick goes negative when pushed forward, so negate it)
         left1y = gamepad1.left_stick_y;
-        left1x = -gamepad1.left_stick_x;
+
         right1x = -gamepad1.right_stick_x;
 
         double baseSpeed = 0.15;
@@ -163,11 +163,11 @@ public class TeleOpMecanumDriveFTC2023 extends OpMode{
             baseSpeed = 0.25;
         }
 
-        double denominator = Math.max(Math.abs(left1y) + Math.abs(left1x) + Math.abs(right1x), 1);
-        double frontLeftPower = (left1y + left1x + right1x) / denominator;
-        double backLeftPower = (left1y - left1x + right1x) / denominator;
-        double frontRightPower = (left1y - left1x - right1x) / denominator;
-        double backRightPower = (left1y + left1x - right1x) / denominator;
+        double denominator = Math.max(Math.abs(left1y) + Math.abs(right1x), 1);
+        double frontLeftPower = (left1y + right1x) / denominator;
+        double backLeftPower = (left1y + right1x) / denominator;
+        double frontRightPower = (left1y - right1x) / denominator;
+        double backRightPower = (left1y  - right1x) / denominator;
         frontLeft.setPower(frontLeftPower*baseSpeed);
         frontRight.setPower(frontRightPower*baseSpeed);
         backLeft.setPower(backLeftPower*baseSpeed);
@@ -203,17 +203,17 @@ public class TeleOpMecanumDriveFTC2023 extends OpMode{
               arm1.setPosition(0.4);
 
         }
-        if (gamepad2.right_trigger > 0.1) {
+        if (gamepad2.left_stick_y > 0.1) {
             climberMotor.setPower(-1);
-        } else if (gamepad2.right_bumper) {
+        } else if (gamepad2.left_stick_y < -0.1) {
             climberMotor.setPower(1);
         } else {
             climberMotor.setPower(0);
         }
 
-        if (gamepad2.left_trigger > 0.1) {
+        if (gamepad2.right_stick_y > 0.1) {
             climber2.setPower(-1);
-        } else if (gamepad2.left_bumper) {
+        } else if (gamepad2.right_stick_y < -0.1) {
             climber2.setPower(1);
         } else {
             climber2.setPower(0);
@@ -222,19 +222,18 @@ public class TeleOpMecanumDriveFTC2023 extends OpMode{
         // furthest right is to the side of robot
         // furthest left is a small part past 0 position
 
-        if (gamepad2.b) {
-            claw.setPosition(0.7);
-        }
-        if (gamepad2.a) {
-            claw.setPosition(0.5);
-
-        }
+//        if (gamepad2.b) {
+//            claw.setPosition(0.7);
+//        }
+//        if (gamepad2.a) {
+//            claw.setPosition(0.5);
+//
+//        }
 //
 
         // Send telemetry message to signify robot running;
         //telemetry.addData("claw",  "Offset = %.2f", clawOffset);
         telemetry.addData("lefty",  "%.2f", left1y);
-        telemetry.addData("leftx",  "%.2f", left1x);
         telemetry.addData("right", "%.2f", right1x);
         telemetry.update();
     }
