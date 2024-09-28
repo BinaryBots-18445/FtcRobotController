@@ -54,7 +54,7 @@ import com.qualcomm.robotcore.util.Range;
 
 @Autonomous(name="Robot: Auto Drive By Encoder", group="Robot")
 public class E extends LinearOpMode {
-// E is basically strife driving + eventual other things probably <<33
+// E is basically strife drivbing + eventual other things probably <<33
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor fL = null;
@@ -88,12 +88,12 @@ public class E extends LinearOpMode {
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
         // Pushing the left stick forward MUST make robot go forward. So adjust these two lines based on your first test drive.
         // Note: The settings here assume direct drive on left and right wheels.  Gear Reduction or 90 Deg drives may require direction flips
-        fL.setDirection(DcMotor.Direction.REVERSE);
-        fR.setDirection(DcMotor.Direction.FORWARD);
-        bL.setDirection(DcMotor.Direction.REVERSE);
-        bR.setDirection(DcMotor.Direction.FORWARD);
-        frontMiddle.setDirection(DcMotor.Direction.REVERSE);
-        backMiddle.setDirection(DcMotor.Direction.FORWARD);
+        fL.setDirection(DcMotor.Direction.FORWARD);
+        fR.setDirection(DcMotor.Direction.REVERSE);
+        bL.setDirection(DcMotor.Direction.FORWARD);
+        bR.setDirection(DcMotor.Direction.REVERSE);
+        frontMiddle.setDirection(DcMotor.Direction.FORWARD);
+        backMiddle.setDirection(DcMotor.Direction.REVERSE);
 
         fL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         fR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -102,31 +102,38 @@ public class E extends LinearOpMode {
         frontMiddle.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backMiddle.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
+        // note from raymond: maybe we should use RUN_TO_POSITION instead?
         fL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         fR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         bL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         bR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         frontMiddle.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backMiddle.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        // Wait for the game to start (driver presses PLAY)
+
         // Send telemetry message to indicate successful Encoder reset
-        telemetry.addData("Starting at",  "%7d :%7d",
-                fL.getCurrentPosition(),
-                fR.getCurrentPosition(),
-                bL.getCurrentPosition(),
-                bR.getCurrentPosition(),
-                frontMiddle.getCurrentPosition(),
-                backMiddle.getCurrentPosition());
+        telemetry.addData(
+            "Starting at",
+            "%7d :%7d",
+            fL.getCurrentPosition(),
+            fR.getCurrentPosition(),
+            bL.getCurrentPosition(),
+            bR.getCurrentPosition(),
+            frontMiddle.getCurrentPosition(),
+            backMiddle.getCurrentPosition()
+        );
         telemetry.update();
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
+        telemetry.addData("Path", "Starting");
+        telemetry.update();
+
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        encoderDrive(DRIVE_SPEED,  48,  48, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-        encoderDrive(TURN_SPEED,   12, -12, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
-        encoderDrive(DRIVE_SPEED, -24, -24, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
+        encoderDrive(DRIVE_SPEED,  5,  5, 5, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+        //(DRIVE_SPEED,   0, 0, 12, 0);  // S2: Turn Right 12 Inches with 4 Sec timeout
+        //encoderDrive(DRIVE_SPEED, -24, -24, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
