@@ -85,7 +85,7 @@ public class E extends LinearOpMode {
     //the distance from one point to another in the circle is 6 inches
     //find circumference and then divided by 4 to find the curve for 90 degrees
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * 3.1415);
-    static final double     DRIVE_SPEED             = 0.6;
+    static final double     DRIVE_SPEED             = 0.5;
     static final double     TURN_SPEED              = 0.5;
     @Override
     public void runOpMode() {
@@ -104,11 +104,10 @@ public class E extends LinearOpMode {
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
         // Pushing the left stick forward MUST make robot go forward. So adjust these two lines based on your first test drive.
         // Note: The settings here assume direct drive on left and right wheels.  Gear Reduction or 90 Deg drives may require direction flips
-        left.setDirection(DcMotor.Direction.REVERSE);
         front.setDirection(DcMotor.Direction.FORWARD);
-        back.setDirection(DcMotor.Direction.FORWARD);
         right.setDirection(DcMotor.Direction.FORWARD);
-
+        back.setDirection(DcMotor.Direction.REVERSE);
+        left.setDirection(DcMotor.Direction.REVERSE);
 
         left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         front.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -126,7 +125,7 @@ public class E extends LinearOpMode {
         // Send telemetry message to indicate successful Encoder reset
         telemetry.addData(
             "Starting at",
-            "%7d :%7d",
+            "%7d %7d %7d %7d",
             left.getCurrentPosition(),
             front.getCurrentPosition(),
             back.getCurrentPosition(),
@@ -145,7 +144,8 @@ public class E extends LinearOpMode {
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
         //the full wheel is 360 degrees, so therefore, the interval in between each vaguely triangle things is 40 degrees,
         //so to get 90 degrees, you have to rotate the wheel 2 1/4 sideways wheels.
-        encoderDrive(DRIVE_SPEED,  5 ,  5, 5, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+        encoderDrive(DRIVE_SPEED,  20,  20,  20.0);
+        encoderDrive(DRIVE_SPEED,  0,  20,  20.0);// S1: Forward 47 Inches with 5 Sec timeout
         //(DRIVE_SPEED,   0, 0, 12, 0);  // S2: Turn Right 12 Inches with 4 Sec timeout
         //encoderDrive(DRIVE_SPEED, -24, -24, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
 
@@ -163,22 +163,29 @@ public class E extends LinearOpMode {
      *  3) Driver stops the OpMode running.
      */
     public void encoderDrive(double speed,
-                             double leftInches, double rightInches, double middleInches,
+                             double leftInches, double frontInches,
                              double timeoutS) {
         int newLeftTarget;
+        int newFrontTarget;
+        int newBackTarget;
         int newRightTarget;
-        int newMiddleTarget;
 
+telemetry.addData("Running If", "1");
+telemetry.update();
         // Ensure that the OpMode is still active
         if (opModeIsActive()) {
 
             // Determine new target position, and pass to motor controller
             newLeftTarget = left.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-            newRightTarget = front.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+            newFrontTarget = front.getCurrentPosition() + (int)(frontInches * COUNTS_PER_INCH);
+            newRightTarget = right.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
+            newBackTarget = back.getTargetPosition() + (int)(frontInches * COUNTS_PER_INCH);
+
+
 
             left.setTargetPosition(newLeftTarget);
-            front.setTargetPosition(newRightTarget);
-            back.setTargetPosition(newLeftTarget);
+            front.setTargetPosition(newFrontTarget);
+            back.setTargetPosition(newBackTarget);
             right.setTargetPosition(newRightTarget);
 
 
@@ -191,6 +198,7 @@ public class E extends LinearOpMode {
 
             // reset the timeout time and start motion.
             runtime.reset();
+
             left.setPower(Math.abs(speed));
             front.setPower(Math.abs(speed));
             back.setPower(Math.abs(speed));
@@ -202,15 +210,23 @@ public class E extends LinearOpMode {
             // its target position, the motion will stop.  This is "safer" in the event that the robot will
             // always end the motion as soon as possible.
             // However, if you require that BOTH motors have finished their moves before the robot continues
-            // onto the next step, use (isBusy() || isBusy()) in the loop test.
+            // onto the next step, use (isBusy() || isBusy()) in the loop test. || means or
+            telemetry.addData("Running Loop now", "1");
+            telemetry.update();
             while (opModeIsActive() &&
                     (runtime.seconds() < timeoutS) &&
-                    (left.isBusy() && front.isBusy() && back.isBusy() && right.isBusy())) {
+                    (front.isBusy() || left.isBusy())) {
+                    //(left.isBusy() && front.isBusy() && back.isBusy() && right.isBusy())) {
 
                 // Display it for the driver.
-                telemetry.addData("Running to",  " %7d :%7d", newLeftTarget,  newRightTarget);
-                telemetry.addData("Currently at",  " at %7d :%7d",
-                        left.getCurrentPosition(), front.getCurrentPosition(), back.getCurrentPosition(), right.getCurrentPosition());
+                telemetry.addData("Running to",  "%7d %7d %7d %7d", newFrontTarget,  newRightTarget,
+                newBackTarget, newLeftTarget);
+                telemetry.addData("Currently at",  "%7d %7d %7d %7d",
+                        front.getCurrentPosition(),
+                        right.getCurrentPosition(),
+                        back.getCurrentPosition(),
+                        left.getCurrentPosition());
+                telemetry.update();
             }
 
             // Stop all motion;
