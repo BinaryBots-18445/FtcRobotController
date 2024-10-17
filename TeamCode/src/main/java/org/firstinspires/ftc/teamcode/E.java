@@ -28,14 +28,14 @@ package org.firstinspires.ftc.teamcode;
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-
-
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 /*
  * This file contains an minimal example of a Linear "OpMode". An OpMode is a 'program' that runs in either
@@ -52,17 +52,15 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous(name="Robot: Auto Drive By Encoder", group="Robot")
 public class E extends LinearOpMode {
-// E is basically strife drivbing + eventual other things probably <<33
+
+    // E is basically strife drivbing + eventual other things probably <<33
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
+
     private DcMotor front = null;
+    private DcMotor right = null;
     private DcMotor back = null;
     private DcMotor left = null;
-    private DcMotor right = null;
-
-
-
-
 
     //counts per motor rev means the number the encoder gives you when the shaft of the motor completes one full turn/revolution
     //https://www.andymark.com/products/neverest-classic-40-gearmotor
@@ -71,8 +69,6 @@ public class E extends LinearOpMode {
     static final double     DRIVE_GEAR_REDUCTION    = 1;     // No External Gearing.
     //https://www.revrobotics.com/DUO-Omni-Wheels/ 90mm convert to inches
     static final double     WHEEL_DIAMETER_INCHES   = 90.0/25.4;     // For figuring circumference
-
-
 
     //Since the goal was to reach n degrees, and the total number of degrees is 360, we divided 360
     //by the number of sideways wheels, or 9. Then,  we divided that number by 90. We multiplied that by
@@ -85,8 +81,9 @@ public class E extends LinearOpMode {
     //the distance from one point to another in the circle is 6 inches
     //find circumference and then divided by 4 to find the curve for 90 degrees
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * 3.1415);
-    static final double     DRIVE_SPEED             = 0.5;
+    static final double     DRIVE_SPEED             = 0.1;
     static final double     TURN_SPEED              = 0.5;
+
     @Override
     public void runOpMode() {
         telemetry.addData("Status", "Initialized");
@@ -95,42 +92,38 @@ public class E extends LinearOpMode {
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
-        left = hardwareMap.get(DcMotor.class, "left");
         front = hardwareMap.get(DcMotor.class, "front");
-        back = hardwareMap.get(DcMotor.class, "back");
         right = hardwareMap.get(DcMotor.class, "right");
-
+        back = hardwareMap.get(DcMotor.class, "back");
+        left = hardwareMap.get(DcMotor.class, "left");
 
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
         // Pushing the left stick forward MUST make robot go forward. So adjust these two lines based on your first test drive.
         // Note: The settings here assume direct drive on left and right wheels.  Gear Reduction or 90 Deg drives may require direction flips
         front.setDirection(DcMotor.Direction.FORWARD);
-        right.setDirection(DcMotor.Direction.FORWARD);
+        right.setDirection(DcMotor.Direction.REVERSE);
         back.setDirection(DcMotor.Direction.REVERSE);
-        left.setDirection(DcMotor.Direction.REVERSE);
+        left.setDirection(DcMotor.Direction.FORWARD);
 
-        left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         front.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        back.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
+        back.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         // note from raymond: maybe we should use RUN_TO_POSITION instead?
-        left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         front.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        back.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
+        back.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Send telemetry message to indicate successful Encoder reset
-        telemetry.addData(
-            "Starting at",
+        Telemetry.Item item = telemetry.addData(
+            "Starting position",
             "%7d %7d %7d %7d",
-            left.getCurrentPosition(),
-            front.getCurrentPosition(),
-            back.getCurrentPosition(),
-            right.getCurrentPosition()
-
+                front.getCurrentPosition(),
+                right.getCurrentPosition(),
+                back.getCurrentPosition(),
+                left.getCurrentPosition()
         );
         telemetry.update();
 
@@ -144,104 +137,127 @@ public class E extends LinearOpMode {
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
         //the full wheel is 360 degrees, so therefore, the interval in between each vaguely triangle things is 40 degrees,
         //so to get 90 degrees, you have to rotate the wheel 2 1/4 sideways wheels.
-        encoderDrive(DRIVE_SPEED,  20,  20,  20.0);
-        encoderDrive(DRIVE_SPEED,  0,  20,  20.0);// S1: Forward 47 Inches with 5 Sec timeout
+
+        encoderDrive(20.0, DRIVE_SPEED,  0,  5, 0,5);
+        // S1: Forward 47 Inches with 5 Sec timeout
         //(DRIVE_SPEED,   0, 0, 12, 0);  // S2: Turn Right 12 Inches with 4 Sec timeout
         //encoderDrive(DRIVE_SPEED, -24, -24, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
+
         sleep(1000);  // pause to display final telemetry message.
     }
 
     /*
-     *  Method to perform a relative move, based on encoder counts.
+     *  moves on the robots current position, based on encoder counts
      *  Encoders are not reset as the move is based on the current position.
      *  Move will stop if any of three conditions occur:
      *  1) Move gets to the desired position
      *  2) Move runs out of time
      *  3) Driver stops the OpMode running.
      */
-    public void encoderDrive(double speed,
-                             double leftInches, double frontInches,
-                             double timeoutS) {
-        int newLeftTarget;
+    public void encoderDrive(
+        double timeoutS,
+        double speed,
+        double frontInches,
+        double rightInches,
+        double backInches,
+        double leftInches
+    ) {
         int newFrontTarget;
-        int newBackTarget;
         int newRightTarget;
+        int newBackTarget;
+        int newLeftTarget;
 
-telemetry.addData("Running If", "1");
-telemetry.update();
+        telemetry.addData("Running If", "1");
+        telemetry.update();
+
         // Ensure that the OpMode is still active
         if (opModeIsActive()) {
 
             // Determine new target position, and pass to motor controller
-            newLeftTarget = left.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
+
             newFrontTarget = front.getCurrentPosition() + (int)(frontInches * COUNTS_PER_INCH);
-            newRightTarget = right.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-            newBackTarget = back.getTargetPosition() + (int)(frontInches * COUNTS_PER_INCH);
+            newRightTarget = right.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+            newBackTarget = back.getCurrentPosition() + (int)(backInches * COUNTS_PER_INCH);
+            newLeftTarget = left.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
 
-
-
-            left.setTargetPosition(newLeftTarget);
             front.setTargetPosition(newFrontTarget);
-            back.setTargetPosition(newBackTarget);
             right.setTargetPosition(newRightTarget);
-
+            back.setTargetPosition(newBackTarget);
+            left.setTargetPosition(newLeftTarget);
 
             // Turn On RUN_TO_POSITION
-            left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             front.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            back.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
+            back.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             // reset the timeout time and start motion.
             runtime.reset();
 
-            left.setPower(Math.abs(speed));
             front.setPower(Math.abs(speed));
-            back.setPower(Math.abs(speed));
             right.setPower(Math.abs(speed));
-
+            back.setPower(Math.abs(speed));
+            left.setPower(Math.abs(speed));
 
             // keep looping while we are still active, and there is time left, and both motors are running.
             // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
             // its target position, the motion will stop.  This is "safer" in the event that the robot will
             // always end the motion as soon as possible.
             // However, if you require that BOTH motors have finished their moves before the robot continues
-            // onto the next step, use (isBusy() || isBusy()) in the loop test. || means or
-            telemetry.addData("Running Loop now", "1");
-            telemetry.update();
-            while (opModeIsActive() &&
-                    (runtime.seconds() < timeoutS) &&
-                    (front.isBusy() || left.isBusy())) {
-                    //(left.isBusy() && front.isBusy() && back.isBusy() && right.isBusy())) {
+            // onto the next step, use (isBusy() || isBusy()) in the loop test.
 
-                // Display it for the driver.
-                telemetry.addData("Running to",  "%7d %7d %7d %7d", newFrontTarget,  newRightTarget,
-                newBackTarget, newLeftTarget);
-                telemetry.addData("Currently at",  "%7d %7d %7d %7d",
-                        front.getCurrentPosition(),
-                        right.getCurrentPosition(),
-                        back.getCurrentPosition(),
-                        left.getCurrentPosition());
+            do { // || means or, and is &&
+                    //(left.isBusy() && front.isBusy() && back.isBusy() && right.isBusy()))
+
+//                telemetry.addData(
+//                    "Timeout",
+//                    "%7d %7d",
+//                    runtime.seconds(),
+//                    timeoutS);
+
+                telemetry.addData(
+                    "Are motors busy?",
+                    "%b %b %b %b",
+                    front.isBusy(),
+                    right.isBusy(),
+                    back.isBusy(),
+                    left.isBusy());
+
+                telemetry.addData(
+                    "Target position",
+                    "%7d %7d %7d %7d",
+                    front.getTargetPosition(),
+                    right.getTargetPosition(),
+                    back.getTargetPosition(),
+                    left.getTargetPosition());
+
+                telemetry.addData(
+                    "Current position",
+                    "%7d %7d %7d %7d",
+                    front.getCurrentPosition(),
+                    right.getCurrentPosition(),
+                    back.getCurrentPosition(),
+                    left.getCurrentPosition());
+
                 telemetry.update();
-            }
+            } while (opModeIsActive() &&
+                    (runtime.seconds() < timeoutS) &&
+                    (right.isBusy() || left.isBusy()));
 
             // Stop all motion;
-            left.setPower(0);
             front.setPower(0);
-            back.setPower(0);
             right.setPower(0);
-
+            back.setPower(0);
+            left.setPower(0);
 
             // Turn off RUN_TO_POSITION
-            left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             front.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            back.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
+            back.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
             sleep(250);   // optional pause after each move.
         }
