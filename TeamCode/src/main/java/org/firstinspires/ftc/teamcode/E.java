@@ -70,19 +70,11 @@ public class E extends LinearOpMode {
     //https://www.revrobotics.com/DUO-Omni-Wheels/ 90mm convert to inches
     static final double     WHEEL_DIAMETER_INCHES   = 90.0/25.4;     // For figuring circumference
 
-    //Since the goal was to reach n degrees, and the total number of degrees is 360, we divided 360
-    //by the number of sideways wheels, or 9. Then,  we divided that number by 90. We multiplied that by
-    //the diameter (90 mm) converted to inches, (90/25.4) multiplied by pi and divided by 9
-    //n/(360/9)*(90.0/25.4*pi)/9
 
- //to do a 180 degree, you have to substitute 180 in as n in this equation(n/(360/9)*(90.0/25.4*pi)/9
-    //and that turns out to roughly 5.6 inches for a 180 degree turn
-    //8.5 inches is the diameter of the circle that the wheels make
-    //the distance from one point to another in the circle is 6 inches
-    //find circumference and then divided by 4 to find the curve for 90 degrees
+
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * 3.1415);
-    static final double     DRIVE_SPEED             = 0.1;
-    static final double     TURN_SPEED              = 0.5;
+    static final double     DRIVE_SPEED             = 0.5;
+    static final double     TURN_SPEED              = 0.1;
 
     @Override
     public void runOpMode() {
@@ -138,7 +130,19 @@ public class E extends LinearOpMode {
         //the full wheel is 360 degrees, so therefore, the interval in between each vaguely triangle things is 40 degrees,
         //so to get 90 degrees, you have to rotate the wheel 2 1/4 sideways wheels.
 
-        encoderDrive(20.0, DRIVE_SPEED,  0,  5, 0,5);
+        //encoderDrive(20.0, DRIVE_SPEED,  0,  24, 0,24);
+        //encoderDrive(20.0, DRIVE_SPEED,  24,  0, 24,0);
+        //encoderDrive(20.0, DRIVE_SPEED,  0,  -24, 0,-24);
+        //encoderDrive(20.0, DRIVE_SPEED,  -24,  0, -24,0);
+        //encoderDrive(20.0, DRIVE_SPEED,  0,  24, 0,24);
+        encoderDrive(20.0, TURN_SPEED,  robotDegreesToWheelInches(90),  robotDegreesToWheelInches(-90), robotDegreesToWheelInches(-90),robotDegreesToWheelInches(90));
+//        encoderDrive(20.0, DRIVE_SPEED,  degreesToInches(90),  degreesToInches(-90), degreesToInches(-90),degreesToInches(90));
+        //encoderDrive(20.0, DRIVE_SPEED,  0,  24, 0,24);
+//        encoderDrive(20.0, DRIVE_SPEED,  5,  5, 5,5);
+        //encoderDrive(20.0, DRIVE_SPEED,  0,  24, 0,24);
+//        encoderDrive(20.0, DRIVE_SPEED,  5,  5, 5,5);
+        //encoderDrive(20.0, DRIVE_SPEED,  0,  24, 0,24);
+//        encoderDrive(20.0, DRIVE_SPEED,  5,  5, 5,5);
         // S1: Forward 47 Inches with 5 Sec timeout
         //(DRIVE_SPEED,   0, 0, 12, 0);  // S2: Turn Right 12 Inches with 4 Sec timeout
         //encoderDrive(DRIVE_SPEED, -24, -24, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
@@ -245,7 +249,7 @@ public class E extends LinearOpMode {
                 telemetry.update();
             } while (opModeIsActive() &&
                     (runtime.seconds() < timeoutS) &&
-                    (right.isBusy() || left.isBusy()));
+                    !(!right.isBusy() && !left.isBusy() && !front.isBusy() && !back.isBusy()));
 
             // Stop all motion;
             front.setPower(0);
@@ -262,5 +266,23 @@ public class E extends LinearOpMode {
             sleep(250);   // optional pause after each move.
         }
 
+    }
+
+    //Since the goal was to reach n degrees, and the total number of degrees is 360, we divided 360
+    //by the number of sideways wheels, or 9. Then,  we divided that number by 90. We multiplied that by
+    //the diameter (90 mm) converted to inches, (90/25.4) multiplied by pi and divided by 9
+    //n/(360/9)*(90.0/25.4*pi)/9
+    //to do a 180 degree, you have to substitute 180 in as n in this equation(n/(360/9)*(90.0/25.4*pi)/9
+    //and that turns out to roughly 5.6 inches for a 180 degree turn
+    public double wheelDegreesToWheelInches(double degrees) {
+        //return degrees/(360.0/9.0)*(90.0/25.4*Math.PI)/9;
+        return (degrees / 360.0) * (90.0 / 25.4 * Math.PI);
+    }
+
+    //8.5 inches is the diameter of the circle that the wheels make
+    //8.5(pi)/(360/degrees)
+    //we get the amount of inches the wheels need to turn by dividing 360 by the desired amount of degrees
+    public double robotDegreesToWheelInches(double degrees) {
+        return (8.5 * Math.PI)/(360 / degrees);
     }
 }
