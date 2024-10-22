@@ -50,10 +50,11 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Robot: Auto Drive By Encoder", group="Robot")
-public class E extends LinearOpMode {
 
-    // E is basically strife drivbing + eventual other things probably <<33
+
+public class E {
+
+    // E is basically strife driving + eventual other things probably <<33
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -61,7 +62,7 @@ public class E extends LinearOpMode {
     private DcMotor right = null;
     private DcMotor back = null;
     private DcMotor left = null;
-
+    LinearOpMode opMode;
     //counts per motor rev means the number the encoder gives you when the shaft of the motor completes one full turn/revolution
     //https://www.andymark.com/products/neverest-classic-40-gearmotor
 
@@ -73,21 +74,23 @@ public class E extends LinearOpMode {
 
 
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * 3.1415);
-    static final double     DRIVE_SPEED             = 0.5;
-    static final double     TURN_SPEED              = 0.1;
+    public static final double     DRIVE_SPEED             = 0.5;
+    public static final double     TURN_SPEED              = 0.1;
 
-    @Override
-    public void runOpMode() {
-        telemetry.addData("Status", "Initialized");
-        telemetry.update();
+
+    public E(LinearOpMode opMode) {
+        this.opMode = opMode;
+
+        opMode.telemetry.addData("Status", "Initialized");
+        opMode.telemetry.update();
 
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
-        front = hardwareMap.get(DcMotor.class, "front");
-        right = hardwareMap.get(DcMotor.class, "right");
-        back = hardwareMap.get(DcMotor.class, "back");
-        left = hardwareMap.get(DcMotor.class, "left");
+        front = opMode.hardwareMap.get(DcMotor.class, "front");
+        right = opMode.hardwareMap.get(DcMotor.class, "right");
+        back = opMode.hardwareMap.get(DcMotor.class, "back");
+        left = opMode.hardwareMap.get(DcMotor.class, "left");
 
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
         // Pushing the left stick forward MUST make robot go forward. So adjust these two lines based on your first test drive.
@@ -109,33 +112,33 @@ public class E extends LinearOpMode {
         left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Send telemetry message to indicate successful Encoder reset
-        Telemetry.Item item = telemetry.addData(
-            "Starting position",
-            "%7d %7d %7d %7d",
+        Telemetry.Item item = opMode.telemetry.addData(
+                "Starting position",
+                "%7d %7d %7d %7d",
                 front.getCurrentPosition(),
                 right.getCurrentPosition(),
                 back.getCurrentPosition(),
                 left.getCurrentPosition()
         );
-        telemetry.update();
+        opMode.telemetry.update();
 
         // Wait for the game to start (driver presses PLAY)
-        waitForStart();
+        opMode.waitForStart();
 
-        telemetry.addData("Path", "Starting");
-        telemetry.update();
+        opMode.telemetry.addData("Path", "Starting");
+        opMode.telemetry.update();
 
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
         //the full wheel is 360 degrees, so therefore, the interval in between each vaguely triangle things is 40 degrees,
         //so to get 90 degrees, you have to rotate the wheel 2 1/4 sideways wheels.
 
-        //encoderDrive(20.0, DRIVE_SPEED,  0,  24, 0,24);
+//        encoderDrive(20.0, DRIVE_SPEED,  0,  24, 0,24);
         //encoderDrive(20.0, DRIVE_SPEED,  24,  0, 24,0);
         //encoderDrive(20.0, DRIVE_SPEED,  0,  -24, 0,-24);
         //encoderDrive(20.0, DRIVE_SPEED,  -24,  0, -24,0);
         //encoderDrive(20.0, DRIVE_SPEED,  0,  24, 0,24);
-        encoderDrive(20.0, TURN_SPEED,  robotDegreesToWheelInches(90),  robotDegreesToWheelInches(-90), robotDegreesToWheelInches(-90),robotDegreesToWheelInches(90));
+//        encoderDrive(20.0, TURN_SPEED,  robotDegreesToWheelInches(90),  robotDegreesToWheelInches(-90), robotDegreesToWheelInches(-90),robotDegreesToWheelInches(90));
 //        encoderDrive(20.0, DRIVE_SPEED,  degreesToInches(90),  degreesToInches(-90), degreesToInches(-90),degreesToInches(90));
         //encoderDrive(20.0, DRIVE_SPEED,  0,  24, 0,24);
 //        encoderDrive(20.0, DRIVE_SPEED,  5,  5, 5,5);
@@ -147,12 +150,14 @@ public class E extends LinearOpMode {
         //(DRIVE_SPEED,   0, 0, 12, 0);  // S2: Turn Right 12 Inches with 4 Sec timeout
         //encoderDrive(DRIVE_SPEED, -24, -24, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
 
-        telemetry.addData("Path", "Complete");
-        telemetry.update();
+        opMode.telemetry.addData("Path", "Complete");
+        opMode.telemetry.update();
 
-        sleep(1000);  // pause to display final telemetry message.
+
+//        sleep(1000);  // pause to display final telemetry message.
+    } public void turnRobotDegrees(double degrees){
+        encoderDrive(20.0, TURN_SPEED,  robotDegreesToWheelInches(degrees),  robotDegreesToWheelInches(-degrees), robotDegreesToWheelInches(-degrees),robotDegreesToWheelInches(degrees));
     }
-
     /*
      *  moves on the robots current position, based on encoder counts
      *  Encoders are not reset as the move is based on the current position.
@@ -174,11 +179,11 @@ public class E extends LinearOpMode {
         int newBackTarget;
         int newLeftTarget;
 
-        telemetry.addData("Running If", "1");
-        telemetry.update();
+        opMode.telemetry.addData("Running If", "1");
+        opMode.telemetry.update();
 
         // Ensure that the OpMode is still active
-        if (opModeIsActive()) {
+        if (opMode.opModeIsActive()) {
 
             // Determine new target position, and pass to motor controller
 
@@ -222,7 +227,7 @@ public class E extends LinearOpMode {
 //                    runtime.seconds(),
 //                    timeoutS);
 
-                telemetry.addData(
+                opMode.telemetry.addData(
                     "Are motors busy?",
                     "%b %b %b %b",
                     front.isBusy(),
@@ -230,7 +235,7 @@ public class E extends LinearOpMode {
                     back.isBusy(),
                     left.isBusy());
 
-                telemetry.addData(
+                opMode.telemetry.addData(
                     "Target position",
                     "%7d %7d %7d %7d",
                     front.getTargetPosition(),
@@ -238,7 +243,7 @@ public class E extends LinearOpMode {
                     back.getTargetPosition(),
                     left.getTargetPosition());
 
-                telemetry.addData(
+                opMode.telemetry.addData(
                     "Current position",
                     "%7d %7d %7d %7d",
                     front.getCurrentPosition(),
@@ -246,8 +251,8 @@ public class E extends LinearOpMode {
                     back.getCurrentPosition(),
                     left.getCurrentPosition());
 
-                telemetry.update();
-            } while (opModeIsActive() &&
+                opMode.telemetry.update();
+            } while (opMode.opModeIsActive() &&
                     (runtime.seconds() < timeoutS) &&
                     !(!right.isBusy() && !left.isBusy() && !front.isBusy() && !back.isBusy()));
 
@@ -263,7 +268,7 @@ public class E extends LinearOpMode {
             back.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-            sleep(250);   // optional pause after each move.
+//            sleep(250);   // optional pause after each move.
         }
 
     }
