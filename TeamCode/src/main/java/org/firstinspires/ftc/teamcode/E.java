@@ -31,7 +31,9 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -58,15 +60,15 @@ public class E {
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
 
-    private DcMotor front = null;
-    private DcMotor right = null;
-    private DcMotor back = null;
-    private DcMotor left = null;
+    private DcMotorEx front = null;
+    private DcMotorEx right = null;
+    private DcMotorEx back = null;
+    private DcMotorEx left = null;
     LinearOpMode opMode;
     //counts per motor rev means the number the encoder gives you when the shaft of the motor completes one full turn/revolution
     //https://www.andymark.com/products/neverest-classic-40-gearmotor
 
-    static final double     COUNTS_PER_MOTOR_REV    = 1120;    // eg: TETRIX Motor Encoder
+    static final double     COUNTS_PER_MOTOR_REV    = 288;    // eg: TETRIX Motor Encoder
     static final double     DRIVE_GEAR_REDUCTION    = 1;     // No External Gearing.
     //https://www.revrobotics.com/DUO-Omni-Wheels/ 90mm convert to inches
     static final double     WHEEL_DIAMETER_INCHES   = 90.0/25.4;     // For figuring circumference
@@ -75,7 +77,7 @@ public class E {
 
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * 3.1415);
     public static final double     DRIVE_SPEED             = 0.5;
-    public static final double     TURN_SPEED              = 0.1;
+    public static final double     TURN_SPEED              = 0.5;
 
 
     public E(LinearOpMode opMode) {
@@ -87,10 +89,10 @@ public class E {
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
-        front = opMode.hardwareMap.get(DcMotor.class, "front");
-        right = opMode.hardwareMap.get(DcMotor.class, "right");
-        back = opMode.hardwareMap.get(DcMotor.class, "back");
-        left = opMode.hardwareMap.get(DcMotor.class, "left");
+        front = opMode.hardwareMap.get(DcMotorEx.class, "front");
+        right = opMode.hardwareMap.get(DcMotorEx.class, "right");
+        back = opMode.hardwareMap.get(DcMotorEx.class, "back");
+        left = opMode.hardwareMap.get(DcMotorEx.class, "left");
 
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
         // Pushing the left stick forward MUST make robot go forward. So adjust these two lines based on your first test drive.
@@ -112,7 +114,7 @@ public class E {
         left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Send telemetry message to indicate successful Encoder reset
-        Telemetry.Item item = opMode.telemetry.addData(
+        opMode.telemetry.addData(
                 "Starting position",
                 "%7d %7d %7d %7d",
                 front.getCurrentPosition(),
@@ -197,6 +199,16 @@ public class E {
             back.setTargetPosition(newBackTarget);
             left.setTargetPosition(newLeftTarget);
 
+            front.setTargetPositionTolerance(9);
+            right.setTargetPositionTolerance(9);
+            back.setTargetPositionTolerance(9);
+            left.setTargetPositionTolerance(9);
+
+            front.setPositionPIDFCoefficients(1);
+            right.setPositionPIDFCoefficients(1);
+            back.setPositionPIDFCoefficients(1);
+            left.setPositionPIDFCoefficients(1);
+
             // Turn On RUN_TO_POSITION
             front.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -250,6 +262,51 @@ public class E {
                     right.getCurrentPosition(),
                     back.getCurrentPosition(),
                     left.getCurrentPosition());
+
+//                front.getPIDFCoefficients()
+                opMode.telemetry.addData(
+                        "velocity",
+                        "%2f %2f %2f %2f",
+                        front.getVelocity(),
+                        right.getVelocity(),
+                        back.getVelocity(),
+                        left.getVelocity());
+                opMode.telemetry.addData(
+                        "target position tolerance",
+                        "%7d %7d %7d %7d",
+                        front.getTargetPositionTolerance(),
+                        right.getTargetPositionTolerance(),
+                        back.getTargetPositionTolerance(),
+                        left.getTargetPositionTolerance());
+                opMode.telemetry.addData(
+                        "P coefficient",
+                        "%2f %2f %2f %2f",
+                        front.getPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION).p,
+                        right.getPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION).p,
+                        back.getPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION).p,
+                        left.getPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION).p);
+                opMode.telemetry.addData(
+                        "I coefficient",
+                        "%2f %2f %2f %2f",
+                        front.getPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION).i,
+                        right.getPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION).i,
+                        back.getPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION).i,
+                        left.getPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION).i);
+
+                opMode.telemetry.addData(
+                        "D coefficient",
+                        "%2f %2f %2f %2f",
+                        front.getPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION).d,
+                        right.getPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION).d,
+                        back.getPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION).d,
+                        left.getPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION).d);
+                opMode.telemetry.addData(
+                        "F coefficient",
+                        "%2f %2f %2f %2f",
+                        front.getPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION).f,
+                        right.getPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION).f,
+                        back.getPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION).f,
+                        left.getPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION).f);
 
                 opMode.telemetry.update();
             } while (opMode.opModeIsActive() &&
