@@ -1,4 +1,5 @@
 package org.firstinspires.ftc.teamcode;
+
 /* Copyright (c) 2017 FIRST. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -28,6 +29,7 @@ package org.firstinspires.ftc.teamcode;
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -36,8 +38,15 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.robotcore.external.navigation.Position;
+import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 
 /*
  * This file contains an minimal example of a Linear "OpMode". An OpMode is a 'program' that runs in either
@@ -55,7 +64,9 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 
 public class E {
-
+    BNO055IMU imu;
+    Orientation angles;
+    Acceleration gravity;
     // E is basically strife driving + eventual other things probably <<33
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
@@ -123,7 +134,16 @@ public class E {
                 left.getCurrentPosition()
         );
         opMode.telemetry.update();
-
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample OpMode
+        parameters.loggingEnabled      = true;
+        parameters.loggingTag          = "IMU";
+        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+        imu = opMode.hardwareMap.get(BNO055IMU.class,"imu");
+        imu.initialize(parameters);
+        imu.startAccelerationIntegration(new Position(), new Velocity(), 50);
         // Wait for the game to start (driver presses PLAY)
         opMode.waitForStart();
 
@@ -159,6 +179,64 @@ public class E {
 //        sleep(1000);  // pause to display final telemetry message.
     } public void turnRobotDegrees(double degrees){
         encoderDrive(20.0, TURN_SPEED,  robotDegreesToWheelInches(degrees),  robotDegreesToWheelInches(-degrees), robotDegreesToWheelInches(-degrees),robotDegreesToWheelInches(degrees));
+    }
+    public void moveRobotForwardInches(double inches){
+        encoderDrive(20.0, DRIVE_SPEED,  0,  inches, 0,inches);
+    }
+    public void makeRobotDoSquare(){
+        encoderDrive(20.0, DRIVE_SPEED,  0,  24, 0,24);
+        encoderDrive(20.0, DRIVE_SPEED,  24,  0, 24,0);
+        encoderDrive(20.0, DRIVE_SPEED,  0,  -24, 0,-24);
+        encoderDrive(20.0, DRIVE_SPEED,  -24,  0, -24,0);
+    }
+    public void moveRobotBackwardsInches(double inches){
+        encoderDrive(20.0, DRIVE_SPEED,  0,  -inches, 0,-inches);
+    }
+
+    public void turnWithGyro(double degrees, double tolerance){
+        if (opMode.opModeIsActive()) {
+            front.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            back.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            front.setPower((TURN_SPEED));
+            right.setPower((-TURN_SPEED));
+            back.setPower((-TURN_SPEED));
+            left.setPower((TURN_SPEED));
+            if (degrees<0){
+                front.setPower((-TURN_SPEED));
+                right.setPower((TURN_SPEED));
+                back.setPower((TURN_SPEED));
+                left.setPower((-TURN_SPEED));
+            }
+                while(opMode.opModeIsActive()){
+                double heading = -1 * getGyroHeading();
+                if (Math.abs(degrees-heading)<tolerance){
+                    break;
+
+                }
+
+
+                opMode.telemetry.addData(
+                        "heading",
+                        "%2f",
+                        heading
+                );
+                 opMode.telemetry.update();
+
+            }
+
+            front.setPower(0);
+            right.setPower(0);
+            back.setPower(0);
+            left.setPower(0);
+        }
+
+    }
+    public double getGyroHeading(){
+        angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        double convertedDegrees = AngleUnit.DEGREES.fromUnit(angles.angleUnit,angles.firstAngle);
+        return convertedDegrees;
     }
     /*
      *  moves on the robots current position, based on encoder counts

@@ -1,17 +1,15 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-@Autonomous(name="Turn Robot 90 Degrees")
-@Disabled
-public class TurnRobot90Degrees extends LinearOpMode {
+@Autonomous(name="Move Robot Forward 2 Feet")
+public class MoveRobotForward2Feet extends LinearOpMode {
 
 
     @Override
     public void runOpMode() throws InterruptedException {
         E e = new E(this);
-        e.turnRobotDegrees(90);
+        e.moveRobotForwardInches(24);
     }
 }
