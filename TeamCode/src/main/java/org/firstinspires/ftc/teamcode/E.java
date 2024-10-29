@@ -124,6 +124,11 @@ public class E {
         back.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
+        front.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        right.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        back.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        left.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         // Send telemetry message to indicate successful Encoder reset
         opMode.telemetry.addData(
                 "Starting position",
@@ -222,14 +227,32 @@ public class E {
                         "%2f",
                         heading
                 );
-                 opMode.telemetry.update();
+
+                 opMode.telemetry.addData(
+                            "velocity",
+                            "%2f %2f %2f %2f",
+                            front.getVelocity(),
+                            right.getVelocity(),
+                            back.getVelocity(),
+                            left.getVelocity());
+                    opMode.telemetry.addData(
+                            "zero power behavior",
+                            "%s %s %s %s,",
+                            front.getZeroPowerBehavior().name(),
+                            right.getZeroPowerBehavior().name(),
+                            back.getZeroPowerBehavior().name(),
+                            left.getZeroPowerBehavior().name());
+                    opMode.telemetry.update();
 
             }
+
+
 
             front.setPower(0);
             right.setPower(0);
             back.setPower(0);
             left.setPower(0);
+            opMode.telemetry.addData("Robot Stopped", "");
         }
 
     }
