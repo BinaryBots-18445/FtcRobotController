@@ -200,6 +200,7 @@ public class E {
 
     public void turnWithGyro(double degrees, double tolerance){
         if (opMode.opModeIsActive()) {
+            double Kp = 1/degrees;
             front.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             back.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -216,7 +217,15 @@ public class E {
             }
                 while(opMode.opModeIsActive()){
                 double heading = -1 * getGyroHeading();
-                if (Math.abs(degrees-heading)<tolerance){
+                double error = degrees - heading;
+                double power = Kp * error;
+                spinTurnWithPower(power);
+                if (heading > 83){
+                    front.setPower(0);
+                    right.setPower(0);
+                    back.setPower(0);
+                    left.setPower(0);
+                    opMode.sleep(5000);
                     break;
 
                 }
@@ -242,16 +251,14 @@ public class E {
                             right.getZeroPowerBehavior().name(),
                             back.getZeroPowerBehavior().name(),
                             left.getZeroPowerBehavior().name());
+
                     opMode.telemetry.update();
 
             }
 
 
 
-            front.setPower(0);
-            right.setPower(0);
-            back.setPower(0);
-            left.setPower(0);
+
             opMode.telemetry.addData("Robot Stopped", "");
         }
 
@@ -260,6 +267,12 @@ public class E {
         angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         double convertedDegrees = AngleUnit.DEGREES.fromUnit(angles.angleUnit,angles.firstAngle);
         return convertedDegrees;
+    }
+    public void spinTurnWithPower(double power){
+        front.setPower((power));
+        right.setPower((-power));
+        back.setPower((-power));
+        left.setPower((power));
     }
     /*
      *  moves on the robots current position, based on encoder counts
@@ -305,10 +318,10 @@ public class E {
             back.setTargetPositionTolerance(9);
             left.setTargetPositionTolerance(9);
 
-            front.setPositionPIDFCoefficients(1);
-            right.setPositionPIDFCoefficients(1);
-            back.setPositionPIDFCoefficients(1);
-            left.setPositionPIDFCoefficients(1);
+            front.setPositionPIDFCoefficients(2);
+            right.setPositionPIDFCoefficients(2);
+            back.setPositionPIDFCoefficients(2);
+            left.setPositionPIDFCoefficients(2);
 
             // Turn On RUN_TO_POSITION
             front.setMode(DcMotor.RunMode.RUN_TO_POSITION);
