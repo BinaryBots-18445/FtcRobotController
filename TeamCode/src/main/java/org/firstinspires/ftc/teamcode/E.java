@@ -29,6 +29,8 @@ package org.firstinspires.ftc.teamcode;
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
+
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -39,6 +41,7 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.hardware.bosch.BNO055IMU;
+
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -62,7 +65,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
  */
 
 
-
 public class E {
     BNO055IMU imu;
     Orientation angles;
@@ -79,21 +81,20 @@ public class E {
     //counts per motor rev means the number the encoder gives you when the shaft of the motor completes one full turn/revolution
     //https://www.andymark.com/products/neverest-classic-40-gearmotor
 
-    static final double     COUNTS_PER_MOTOR_REV    = 288;    // eg: TETRIX Motor Encoder
-    static final double     DRIVE_GEAR_REDUCTION    = 1;     // No External Gearing.
+    static final double COUNTS_PER_MOTOR_REV = 288;    // eg: TETRIX Motor Encoder
+    static final double DRIVE_GEAR_REDUCTION = 1;     // No External Gearing.
     //https://www.revrobotics.com/DUO-Omni-Wheels/ 90mm convert to inches
-    static final double     WHEEL_DIAMETER_INCHES   = 90.0/25.4;     // For figuring circumference
+    static final double WHEEL_DIAMETER_INCHES = 90.0 / 25.4;     // For figuring circumference
 
 
-
-    static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * 3.1415);
-    public static final double     DRIVE_SPEED             = 0.5;
-    public static final double     TURN_SPEED              = 0.5;
+    static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * 3.1415);
+    public static final double DRIVE_SPEED = 0.5;
+    public static final double TURN_SPEED = 0.5;
 
 
     public E(LinearOpMode opMode) {
         this.opMode = opMode;
-
+        opMode.telemetry.setMsTransmissionInterval(50);
         opMode.telemetry.addData("Status", "Initialized");
         opMode.telemetry.update();
 
@@ -140,13 +141,13 @@ public class E {
         );
         opMode.telemetry.update();
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
-        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
         parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample OpMode
-        parameters.loggingEnabled      = true;
-        parameters.loggingTag          = "IMU";
+        parameters.loggingEnabled = true;
+        parameters.loggingTag = "IMU";
         parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
-        imu = opMode.hardwareMap.get(BNO055IMU.class,"imu");
+        imu = opMode.hardwareMap.get(BNO055IMU.class, "imu");
         imu.initialize(parameters);
         imu.startAccelerationIntegration(new Position(), new Velocity(), 50);
         // Wait for the game to start (driver presses PLAY)
@@ -182,25 +183,34 @@ public class E {
 
 
 //        sleep(1000);  // pause to display final telemetry message.
-    } public void turnRobotDegrees(double degrees){
-        encoderDrive(20.0, TURN_SPEED,  robotDegreesToWheelInches(degrees),  robotDegreesToWheelInches(-degrees), robotDegreesToWheelInches(-degrees),robotDegreesToWheelInches(degrees));
-    }
-    public void moveRobotForwardInches(double inches){
-        encoderDrive(20.0, DRIVE_SPEED,  0,  inches, 0,inches);
-    }
-    public void makeRobotDoSquare(){
-        encoderDrive(20.0, DRIVE_SPEED,  0,  24, 0,24);
-        encoderDrive(20.0, DRIVE_SPEED,  24,  0, 24,0);
-        encoderDrive(20.0, DRIVE_SPEED,  0,  -24, 0,-24);
-        encoderDrive(20.0, DRIVE_SPEED,  -24,  0, -24,0);
-    }
-    public void moveRobotBackwardsInches(double inches){
-        encoderDrive(20.0, DRIVE_SPEED,  0,  -inches, 0,-inches);
     }
 
-    public void turnWithGyro(double degrees, double tolerance){
+    public void turnRobotDegrees(double degrees) {
+        encoderDrive(20.0, TURN_SPEED, robotDegreesToWheelInches(degrees), robotDegreesToWheelInches(-degrees), robotDegreesToWheelInches(-degrees), robotDegreesToWheelInches(degrees));
+    }
+
+    public void moveRobotForwardInches(double inches) {
+        encoderDrive(20.0, DRIVE_SPEED, 0, inches, 0, inches);
+    }
+
+    public void makeRobotDoSquare() {
+        encoderDrive(20.0, DRIVE_SPEED, 0, 24, 0, 24);
+        encoderDrive(20.0, DRIVE_SPEED, 24, 0, 24, 0);
+        encoderDrive(20.0, DRIVE_SPEED, 0, -24, 0, -24);
+        encoderDrive(20.0, DRIVE_SPEED, -24, 0, -24, 0);
+    }
+
+    public void moveRobotBackwardsInches(double inches) {
+        encoderDrive(20.0, DRIVE_SPEED, 0, -inches, 0, -inches);
+    }
+
+    public void turnWithGyro(double degrees, double tolerance) {
         if (opMode.opModeIsActive()) {
-            double Kp = 1/degrees;
+            double Kp = 1 / degrees;
+//            double Ki = -0.5 * Kp;
+//            double accError = 0;
+            double Kd = 0.5 * Kp;
+            double Perror = 0;
             front.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             back.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -209,23 +219,24 @@ public class E {
             right.setPower((-TURN_SPEED));
             back.setPower((-TURN_SPEED));
             left.setPower((TURN_SPEED));
-            if (degrees<0){
-                front.setPower((-TURN_SPEED));
-                right.setPower((TURN_SPEED));
-                back.setPower((TURN_SPEED));
-                left.setPower((-TURN_SPEED));
-            }
-                while(opMode.opModeIsActive()){
-                double heading = -1 * getGyroHeading();
+            while (opMode.opModeIsActive()) {
+                double heading = 0.5 * getGyroHeading();
                 double error = degrees - heading;
-                double power = Kp * error;
-                spinTurnWithPower(power);
-                if (heading > 83){
+//                accError += error;
+                double power = Kp * error * 0 + Kd * (error - Perror);
+                Perror = error;
+                if (degrees < 0) {
+                    spinTurnWithPower(-power);
+                } else {
+                    spinTurnWithPower(power);
+                }
+
+
+                if (Math.abs(heading - degrees) < tolerance) {
                     front.setPower(0);
                     right.setPower(0);
                     back.setPower(0);
                     left.setPower(0);
-                    opMode.sleep(5000);
                     break;
 
                 }
@@ -237,43 +248,44 @@ public class E {
                         heading
                 );
 
-                 opMode.telemetry.addData(
-                            "velocity",
-                            "%2f %2f %2f %2f",
-                            front.getVelocity(),
-                            right.getVelocity(),
-                            back.getVelocity(),
-                            left.getVelocity());
-                    opMode.telemetry.addData(
-                            "zero power behavior",
-                            "%s %s %s %s,",
-                            front.getZeroPowerBehavior().name(),
-                            right.getZeroPowerBehavior().name(),
-                            back.getZeroPowerBehavior().name(),
-                            left.getZeroPowerBehavior().name());
+                opMode.telemetry.addData(
+                        "velocity",
+                        "%2f %2f %2f %2f",
+                        front.getVelocity(),
+                        right.getVelocity(),
+                        back.getVelocity(),
+                        left.getVelocity());
+                opMode.telemetry.addData(
+                        "zero power behavior",
+                        "%s %s %s %s,",
+                        front.getZeroPowerBehavior().name(),
+                        right.getZeroPowerBehavior().name(),
+                        back.getZeroPowerBehavior().name(),
+                        left.getZeroPowerBehavior().name());
 
-                    opMode.telemetry.update();
+                opMode.telemetry.update();
 
             }
-
-
 
 
             opMode.telemetry.addData("Robot Stopped", "");
         }
 
     }
-    public double getGyroHeading(){
-        angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        double convertedDegrees = AngleUnit.DEGREES.fromUnit(angles.angleUnit,angles.firstAngle);
+
+    public double getGyroHeading() {
+        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        double convertedDegrees = AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle);
         return convertedDegrees;
     }
-    public void spinTurnWithPower(double power){
+
+    public void spinTurnWithPower(double power) {
         front.setPower((power));
         right.setPower((-power));
         back.setPower((-power));
         left.setPower((power));
     }
+
     /*
      *  moves on the robots current position, based on encoder counts
      *  Encoders are not reset as the move is based on the current position.
@@ -283,12 +295,12 @@ public class E {
      *  3) Driver stops the OpMode running.
      */
     public void encoderDrive(
-        double timeoutS,
-        double speed,
-        double frontInches,
-        double rightInches,
-        double backInches,
-        double leftInches
+            double timeoutS,
+            double speed,
+            double frontInches,
+            double rightInches,
+            double backInches,
+            double leftInches
     ) {
         int newFrontTarget;
         int newRightTarget;
@@ -303,10 +315,10 @@ public class E {
 
             // Determine new target position, and pass to motor controller
 
-            newFrontTarget = front.getCurrentPosition() + (int)(frontInches * COUNTS_PER_INCH);
-            newRightTarget = right.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
-            newBackTarget = back.getCurrentPosition() + (int)(backInches * COUNTS_PER_INCH);
-            newLeftTarget = left.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
+            newFrontTarget = front.getCurrentPosition() + (int) (frontInches * COUNTS_PER_INCH);
+            newRightTarget = right.getCurrentPosition() + (int) (rightInches * COUNTS_PER_INCH);
+            newBackTarget = back.getCurrentPosition() + (int) (backInches * COUNTS_PER_INCH);
+            newLeftTarget = left.getCurrentPosition() + (int) (leftInches * COUNTS_PER_INCH);
 
             front.setTargetPosition(newFrontTarget);
             right.setTargetPosition(newRightTarget);
@@ -345,7 +357,7 @@ public class E {
             // onto the next step, use (isBusy() || isBusy()) in the loop test.
 
             do { // || means or, and is &&
-                    //(left.isBusy() && front.isBusy() && back.isBusy() && right.isBusy()))
+                //(left.isBusy() && front.isBusy() && back.isBusy() && right.isBusy()))
 
 //                telemetry.addData(
 //                    "Timeout",
@@ -354,28 +366,28 @@ public class E {
 //                    timeoutS);
 
                 opMode.telemetry.addData(
-                    "Are motors busy?",
-                    "%b %b %b %b",
-                    front.isBusy(),
-                    right.isBusy(),
-                    back.isBusy(),
-                    left.isBusy());
+                        "Are motors busy?",
+                        "%b %b %b %b",
+                        front.isBusy(),
+                        right.isBusy(),
+                        back.isBusy(),
+                        left.isBusy());
 
                 opMode.telemetry.addData(
-                    "Target position",
-                    "%7d %7d %7d %7d",
-                    front.getTargetPosition(),
-                    right.getTargetPosition(),
-                    back.getTargetPosition(),
-                    left.getTargetPosition());
+                        "Target position",
+                        "%7d %7d %7d %7d",
+                        front.getTargetPosition(),
+                        right.getTargetPosition(),
+                        back.getTargetPosition(),
+                        left.getTargetPosition());
 
                 opMode.telemetry.addData(
-                    "Current position",
-                    "%7d %7d %7d %7d",
-                    front.getCurrentPosition(),
-                    right.getCurrentPosition(),
-                    back.getCurrentPosition(),
-                    left.getCurrentPosition());
+                        "Current position",
+                        "%7d %7d %7d %7d",
+                        front.getCurrentPosition(),
+                        right.getCurrentPosition(),
+                        back.getCurrentPosition(),
+                        left.getCurrentPosition());
 
 //                front.getPIDFCoefficients()
                 opMode.telemetry.addData(
@@ -459,6 +471,6 @@ public class E {
     //8.5(pi)/(360/degrees)
     //we get the amount of inches the wheels need to turn by dividing 360 by the desired amount of degrees
     public double robotDegreesToWheelInches(double degrees) {
-        return (8.5 * Math.PI)/(360 / degrees);
+        return (8.5 * Math.PI) / (360 / degrees);
     }
 }

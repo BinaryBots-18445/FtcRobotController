@@ -10,9 +10,9 @@ public class TurnRobot180Degrees extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        telemetry.setMsTransmissionInterval(50);
+
         E e = new E(this);
-        e.turnWithGyro(179,6);
+        e.turnWithGyro(179,0.1);
 
     }
 }
