@@ -206,10 +206,11 @@ public class E {
 
     public void turnWithGyro(double degrees, double tolerance) {
         if (opMode.opModeIsActive()) {
-            double Kp = 1 / degrees;
+            double Kp = 1.0 / degrees;
+            double minPower = 0.05;
 //            double Ki = -0.5 * Kp;
 //            double accError = 0;
-            double Kd = 0.5 * Kp;
+            double Kd = 25 * Kp;
             double Perror = 0;
             front.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -220,10 +221,18 @@ public class E {
             back.setPower((-TURN_SPEED));
             left.setPower((TURN_SPEED));
             while (opMode.opModeIsActive()) {
-                double heading = 0.5 * getGyroHeading();
+                double heading = -1 * getGyroHeading();
                 double error = degrees - heading;
 //                accError += error;
-                double power = Kp * error * 0 + Kd * (error - Perror);
+                double power = Kp * error + Kd * (error - Perror);
+                if (Math.abs(power) < minPower){
+                    if(power > 0){
+                    power = minPower;
+                    }
+                    else{
+                        power = -minPower;
+                    }
+                }
                 Perror = error;
                 if (degrees < 0) {
                     spinTurnWithPower(-power);
@@ -232,7 +241,7 @@ public class E {
                 }
 
 
-                if (Math.abs(heading - degrees) < tolerance) {
+                if (Math.abs(error) < tolerance) {
                     front.setPower(0);
                     right.setPower(0);
                     back.setPower(0);

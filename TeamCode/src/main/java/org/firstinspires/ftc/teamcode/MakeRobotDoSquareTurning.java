@@ -12,10 +12,11 @@ public class MakeRobotDoSquareTurning extends LinearOpMode {
         E e = new E(this);
         e.encoderDrive(20.0, e.DRIVE_SPEED,  0,  24, 0,24);
         e.encoderDrive(20.0, e.DRIVE_SPEED,  24,  0, 24,0);
-        e.turnWithGyro(180,6);
+        e.turnWithGyro(180,0.1);
         e.encoderDrive(20.0, e.DRIVE_SPEED,  0,  24, 0,24);
-        e.turnWithGyro( 90,3);
+        e.turnWithGyro( 90,0.1);
         e.encoderDrive(20.0, e.DRIVE_SPEED,  0,  24, 0,24);
+        e.turnWithGyro( 90,0.1);
 
     }
 }
