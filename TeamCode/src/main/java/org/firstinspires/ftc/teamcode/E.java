@@ -88,7 +88,7 @@ public class E {
 
 
     static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * 3.1415);
-    public static final double DRIVE_SPEED = 0.5;
+    public static final double DRIVE_SPEED = 0.8;
     public static final double TURN_SPEED = 0.5;
 
 
@@ -294,7 +294,9 @@ public class E {
         back.setPower((-power));
         left.setPower((power));
     }
+    public void moveStraightWithPower(double timeoutS, double power ,double frontInches, double rightInches, double backInches, double leftInches){
 
+    }
     /*
      *  moves on the robots current position, based on encoder counts
      *  Encoders are not reset as the move is based on the current position.
@@ -339,10 +341,10 @@ public class E {
             back.setTargetPositionTolerance(9);
             left.setTargetPositionTolerance(9);
 
-            front.setPositionPIDFCoefficients(2);
-            right.setPositionPIDFCoefficients(2);
-            back.setPositionPIDFCoefficients(2);
-            left.setPositionPIDFCoefficients(2);
+            front.setPositionPIDFCoefficients(15);
+            right.setPositionPIDFCoefficients(15);
+            back.setPositionPIDFCoefficients(15);
+            left.setPositionPIDFCoefficients(15);
 
             // Turn On RUN_TO_POSITION
             front.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -353,10 +355,6 @@ public class E {
             // reset the timeout time and start motion.
             runtime.reset();
 
-            front.setPower(Math.abs(speed));
-            right.setPower(Math.abs(speed));
-            back.setPower(Math.abs(speed));
-            left.setPower(Math.abs(speed));
 
             // keep looping while we are still active, and there is time left, and both motors are running.
             // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
@@ -373,7 +371,12 @@ public class E {
 //                    "%7d %7d",
 //                    runtime.seconds(),
 //                    timeoutS);
-
+                double error = -1 * getGyroHeading();
+                double kp = 1/180;
+                front.setPower(speed+ kp * error);
+                right.setPower(0);
+                back.setPower(speed - kp * error);
+                left.setPower(0);
                 opMode.telemetry.addData(
                         "Are motors busy?",
                         "%b %b %b %b",
