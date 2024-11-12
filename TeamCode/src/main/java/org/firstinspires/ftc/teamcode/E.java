@@ -371,12 +371,34 @@ public class E {
 //                    "%7d %7d",
 //                    runtime.seconds(),
 //                    timeoutS);
+
                 double error = -1 * getGyroHeading();
-                double kp = 1/180;
-                front.setPower(speed+ kp * error);
-                right.setPower(0);
-                back.setPower(speed - kp * error);
-                left.setPower(0);
+                double kp = 1.0/180;
+                double frontSpeed = speed;
+                double rightSpeed = speed;
+                double backSpeed = speed;
+                double leftSpeed = speed;
+
+                front.setPower(frontSpeed);
+                right.setPower(rightSpeed);
+                back.setPower(backSpeed);
+                left.setPower(leftSpeed);
+                if (frontSpeed > backSpeed){
+                    front.setPower(frontSpeed - kp * error);
+                    back.setPower(backSpeed + kp * error);
+                }
+                if (backSpeed > frontSpeed){
+                    back.setPower(backSpeed - kp * error);
+                    front.setPower(frontSpeed + kp * error);
+                }
+                if (leftSpeed > rightSpeed){
+                    left.setPower(leftSpeed - kp * error);
+                    right.setPower(rightSpeed + kp * error);
+                }
+                if (rightSpeed > leftSpeed){
+                    right.setPower(rightSpeed - kp * error);
+                    left.setPower(leftSpeed + kp * error);
+                }
                 opMode.telemetry.addData(
                         "Are motors busy?",
                         "%b %b %b %b",
@@ -445,7 +467,11 @@ public class E {
                         right.getPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION).f,
                         back.getPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION).f,
                         left.getPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION).f);
-
+                opMode.telemetry.addData(
+                        "heading",
+                        "%2f",
+                        getGyroHeading() * -1
+                );
                 opMode.telemetry.update();
             } while (opMode.opModeIsActive() &&
                     (runtime.seconds() < timeoutS) &&
