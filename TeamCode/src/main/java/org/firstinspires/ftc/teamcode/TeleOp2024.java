@@ -18,12 +18,11 @@ public class TeleOp2024 extends OpMode {
     // variables for motors
     // note: motors must be defined as member variables on the class
     //       so that they can be used by every function in the class
-    DcMotor frontLeft;
-    DcMotor frontRight;
-    DcMotor backLeft;
-    DcMotor backRight;
-    DcMotor frontMiddle;
-    DcMotor backMiddle;
+    DcMotor front;
+    DcMotor right;
+    DcMotor back;
+    DcMotor left;
+
 
     /**
      * This function runs when the driver presses the INIT button on the driver station.
@@ -32,21 +31,19 @@ public class TeleOp2024 extends OpMode {
      */
     public void init() {
         // initialize motors
-        frontLeft   = hardwareMap.get(DcMotor.class, "front_left");
-        backLeft    = hardwareMap.get(DcMotor.class, "back_left");
-        frontRight  = hardwareMap.get(DcMotor.class, "front_right");
-        backRight   = hardwareMap.get(DcMotor.class, "back_right");
-        frontMiddle = hardwareMap.get(DcMotor.class, "front_middle");
-        backMiddle  = hardwareMap.get(DcMotor.class, "back_middle");
+        front   = hardwareMap.get(DcMotor.class, "front");
+        right    = hardwareMap.get(DcMotor.class, "right");
+        back  = hardwareMap.get(DcMotor.class, "back");
+        left   = hardwareMap.get(DcMotor.class, "left");
+
 
         // the motors on the left side of the robot need to be reversed
         // because their axles point in the opposite direction as the motors on the right side of the robot
-        frontLeft.setDirection(DcMotor.Direction.REVERSE);
-        frontRight.setDirection(DcMotor.Direction.FORWARD);
-        backLeft.setDirection(DcMotor.Direction.REVERSE);
-        backRight.setDirection(DcMotor.Direction.FORWARD);
-        frontMiddle.setDirection(DcMotor.Direction.REVERSE);
-        backMiddle.setDirection(DcMotor.Direction.FORWARD);
+        front.setDirection(DcMotor.Direction.REVERSE);
+//        right.setDirection(DcMotor.Direction.FORWARD);
+        back.setDirection(DcMotor.Direction.REVERSE);
+//        left.setDirection(DcMotor.Direction.FORWARD);
+
 
         // tell the driver that the robot is ready
         telemetry.addData(">", "Robot Ready. Press Play.");
@@ -59,19 +56,18 @@ public class TeleOp2024 extends OpMode {
      */
     public void loop() {
         // get inputs from the gamepad
-        double leftY = gamepad1.left_stick_y;
-        double leftX = gamepad1.left_stick_x;
+        double leftY = -gamepad1.left_stick_y;
+        double leftX = -gamepad1.left_stick_x;
         double rightX = gamepad1.right_stick_x;
 
         // the left and right motors make the robot go backward and forward
-        frontLeft.setPower(leftY - rightX/2);
-        backLeft.setPower(leftY - rightX/2);
-        frontRight.setPower(leftY + rightX/2);
-        backRight.setPower(leftY + rightX/2);
+        front.setPower(leftX - rightX/2);
+        back.setPower(-leftX - rightX/2);
+        right.setPower(-leftY + rightX/2);
+        left.setPower(leftY + rightX/2);
         // the middle motors make the robot go to the left or right
         // note: turn is too sensitive at default so divide rightX by 2
-        frontMiddle.setPower(leftX);
-        backMiddle.setPower(leftX);
+
 
         // send telemetry message to signify robot running
         // %.2f shows two decimal places
