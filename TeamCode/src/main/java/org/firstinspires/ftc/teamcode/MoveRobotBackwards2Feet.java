@@ -10,6 +10,6 @@ public class MoveRobotBackwards2Feet extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         E e = new E(this);
-        e.moveRobotBackwardsInches(24);
+        e.fourWheelMoveRobotBackwardsInches(24);
     }
 }

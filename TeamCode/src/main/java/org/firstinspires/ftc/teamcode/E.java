@@ -29,20 +29,13 @@ package org.firstinspires.ftc.teamcode;
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
-
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.PIDFCoefficients;
-import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -185,11 +178,15 @@ public class E {
 //        sleep(1000);  // pause to display final telemetry message.
     }
 
-    public void turnRobotDegrees(double degrees) {
+    public void fourWheelTurnRobotDegrees(double degrees) {
         encoderDrive(20.0, TURN_SPEED, robotDegreesToWheelInches(degrees), robotDegreesToWheelInches(-degrees), robotDegreesToWheelInches(-degrees), robotDegreesToWheelInches(degrees));
     }
 
-    public void moveRobotForwardInches(double inches) {
+
+    public void fourWheelMoveRobotForwardInches(double inches) {
+        encoderDrive(20.0, DRIVE_SPEED, 0, inches, 0, inches);
+    }
+    public void mechanumMoveRobotForwardInches(double inches) {
         encoderDrive(20.0, DRIVE_SPEED, 0, inches, 0, inches);
     }
 
@@ -200,7 +197,10 @@ public class E {
         encoderDrive(20.0, DRIVE_SPEED, -24, 0, -24, 0);
     }
 
-    public void moveRobotBackwardsInches(double inches) {
+    public void fourWheelMoveRobotBackwardsInches(double inches) {
+        encoderDrive(20.0, DRIVE_SPEED, 0, -inches, 0, -inches);
+    }
+    public void mechanumMoveRobotBackwardsInches(double inches) {
         encoderDrive(20.0, DRIVE_SPEED, 0, -inches, 0, -inches);
     }
 
