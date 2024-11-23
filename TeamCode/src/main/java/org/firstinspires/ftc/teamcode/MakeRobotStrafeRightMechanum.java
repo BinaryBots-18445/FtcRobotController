@@ -2,15 +2,15 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-@Autonomous(name="Make Robot Strafe Left")
-public class FourWheelAutonomous extends LinearOpMode{
+@Autonomous(name="Make Robot Strafe Right Mechanum")
+public class MakeRobotStrafeRightMechanum extends LinearOpMode{
 
 
 
     @Override
     public void runOpMode() throws InterruptedException {
-        FourWheelDrive e = new FourWheelDrive(this);
-        e.MoveRobotForwardInches(4);
-        e.MakeRobotStrafeLeft(39 );
+        MechanumDrive e = new MechanumDrive(this);
+        e.MakeRobotStrafeRight(24000);
     }
 }
+
