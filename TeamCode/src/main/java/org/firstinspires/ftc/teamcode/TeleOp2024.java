@@ -19,10 +19,10 @@ public class TeleOp2024 extends LinearOpMode {
     // variables for motors
     // note: motors must be defined as member variables on the class
     //       so that they can be used by every function in the class
-//    DcMotor front;
-//    DcMotor right;
-//    DcMotor back;
-//    DcMotor left;
+    DcMotor front;
+    DcMotor right;
+    DcMotor back;
+    DcMotor left;
     MechanumDrive e;
 
 
@@ -36,10 +36,10 @@ public class TeleOp2024 extends LinearOpMode {
     public void runOpMode() {
         e = new MechanumDrive(this);
         // initialize motors
-//        front   = hardwareMap.get(DcMotor.class, "front");
-//        right    = hardwareMap.get(DcMotor.class, "right");
-//        back  = hardwareMap.get(DcMotor.class, "back");
-//        left   = hardwareMap.get(DcMotor.class, "left");
+        front   = hardwareMap.get(DcMotor.class, "front");
+        right    = hardwareMap.get(DcMotor.class, "right");
+        back  = hardwareMap.get(DcMotor.class, "back");
+        left   = hardwareMap.get(DcMotor.class, "left");
 //
 //
 //        // the motors on the left side of the robot need to be reversed
@@ -66,13 +66,7 @@ public class TeleOp2024 extends LinearOpMode {
         double leftX = -gamepad1.left_stick_x;
         double rightX = gamepad1.right_stick_x;
 
-        // the left and right motors make the robot go backward and forward
-//        front.setPower(leftX - rightX/2);
-//        back.setPower(-leftX - rightX/2);
-//        right.setPower(-leftY + rightX/2);
-//        left.setPower(leftY + rightX/2);
-        // the middle motors make the robot go to the left or right
-        // note: turn is too sensitive at default so divide rightX by 2
+        e.MoveRobot(leftY,leftX,rightX);
 
 
         // send telemetry message to signify robot running
