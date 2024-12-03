@@ -36,10 +36,10 @@ public class TeleOp2024 extends LinearOpMode {
     public void runOpMode() {
         e = new MechanumDrive(this);
         // initialize motors
-        front   = hardwareMap.get(DcMotor.class, "front");
-        right    = hardwareMap.get(DcMotor.class, "right");
-        back  = hardwareMap.get(DcMotor.class, "back");
-        left   = hardwareMap.get(DcMotor.class, "left");
+//        front   = hardwareMap.get(DcMotor.class, "front");
+//        right    = hardwareMap.get(DcMotor.class, "right");
+//        back  = hardwareMap.get(DcMotor.class, "back");
+//        left   = hardwareMap.get(DcMotor.class, "left");
 //
 //
 //        // the motors on the left side of the robot need to be reversed
@@ -63,7 +63,7 @@ public class TeleOp2024 extends LinearOpMode {
     while(opModeIsActive()){
         // get inputs from the gamepad
         double leftY = -gamepad1.left_stick_y;
-        double leftX = -gamepad1.left_stick_x;
+        double leftX = -gamepad1.left_stick_x * 1.1;
         double rightX = gamepad1.right_stick_x;
 
         e.MoveRobot(leftY,leftX,rightX);

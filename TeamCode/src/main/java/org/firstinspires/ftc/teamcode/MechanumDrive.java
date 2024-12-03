@@ -56,42 +56,16 @@ public class MechanumDrive extends DrivetrainBase{
         right.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         back.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         left.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        if (forward > 0) {
-            front.setPower(forward);
-            right.setPower(forward);
-            back.setPower(forward);
-            left.setPower(forward);
-        }
-        if (forward < 0) {
-            front.setPower(-forward);
-            right.setPower(-forward);
-            back.setPower(-forward);
-            left.setPower(-forward);
-        }
-        if (rightward < 0) {
-            front.setPower(rightward);
-            right.setPower(-rightward);
-            back.setPower(rightward);
-            left.setPower(-rightward);
-        }
-        if (rightward > 0) {
-            front.setPower(-rightward);
-            right.setPower(rightward);
-            back.setPower(-rightward);
-            left.setPower(rightward);
-        }
-        if (clockwise > 0) {
-            front.setPower(clockwise);
-            right.setPower(-clockwise);
-            back.setPower(clockwise);
-            left.setPower(-clockwise);
-        }
-        if (clockwise < 0) {
-            front.setPower(-clockwise);
-            right.setPower(clockwise);
-            back.setPower(-clockwise);
-            left.setPower(clockwise);
-        }
+        double denominator = Math.max(Math.abs(forward) + Math.abs(rightward) + Math.abs(clockwise), 1);
+        double frontLeftPower = (forward + rightward + clockwise) / denominator;
+        double backLeftPower = (forward - rightward - clockwise) / denominator;
+        double frontRightPower = (forward - rightward + clockwise) / denominator;
+        double backRightPower = (forward + rightward - clockwise) / denominator;
+
+        left.setPower(frontLeftPower);
+        back.setPower(backLeftPower);
+        front.setPower(frontRightPower);
+        right.setPower(backRightPower);
     }
     public MechanumDrive(LinearOpMode opMode) {
         super(opMode);
