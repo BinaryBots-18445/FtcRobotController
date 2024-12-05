@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 public class MechanumDrive extends DrivetrainBase{
     public void MoveRobotBackwardsInches(double inches) {
@@ -57,10 +58,10 @@ public class MechanumDrive extends DrivetrainBase{
         back.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         left.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         double denominator = Math.max(Math.abs(forward) + Math.abs(rightward) + Math.abs(clockwise), 1);
-        double frontLeftPower = (forward + rightward + clockwise) / denominator;
+        double frontLeftPower = (forward + rightward - clockwise) / denominator;
         double backLeftPower = (forward - rightward - clockwise) / denominator;
         double frontRightPower = (forward - rightward + clockwise) / denominator;
-        double backRightPower = (forward + rightward - clockwise) / denominator;
+        double backRightPower = (forward + rightward + clockwise) / denominator;
 
         left.setPower(frontLeftPower);
         back.setPower(backLeftPower);
@@ -69,5 +70,9 @@ public class MechanumDrive extends DrivetrainBase{
     }
     public MechanumDrive(LinearOpMode opMode) {
         super(opMode);
+        front.setDirection(DcMotor.Direction.FORWARD);
+        right.setDirection(DcMotor.Direction.FORWARD);
+        back.setDirection(DcMotor.Direction.REVERSE);
+        left.setDirection(DcMotor.Direction.FORWARD);
     }
 }
