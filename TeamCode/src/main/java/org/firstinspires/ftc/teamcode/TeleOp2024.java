@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 /**
  * Pushing the left  stick forward      makes the robot go forward
@@ -19,10 +20,9 @@ public class TeleOp2024 extends LinearOpMode {
     // variables for motors
     // note: motors must be defined as member variables on the class
     //       so that they can be used by every function in the class
-    DcMotor front;
-    DcMotor right;
-    DcMotor back;
-    DcMotor left;
+
+    DcMotor arm1;
+    DcMotor arm2;
     MechanumDrive e;
 
 
@@ -36,18 +36,21 @@ public class TeleOp2024 extends LinearOpMode {
     public void runOpMode() {
         e = new MechanumDrive(this);
         // initialize motors
-//        front   = hardwareMap.get(DcMotor.class, "front");
-//        right    = hardwareMap.get(DcMotor.class, "right");
-//        back  = hardwareMap.get(DcMotor.class, "back");
-//        left   = hardwareMap.get(DcMotor.class, "left");
+        arm1 = hardwareMap.get(DcMotor.class, "arm1");
+        arm2 = hardwareMap.get(DcMotor.class, "arm2");
+        arm1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        arm2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
 //
 //
 //        // the motors on the left side of the robot need to be reversed
 //        // because their axles point in the opposite direction as the motors on the right side of the robot
 //        front.setDirection(DcMotor.Direction.REVERSE);
-////        right.setDirection(DcMotor.Direction.FORWARD);
+//        right.setDirection(DcMotor.Direction.FORWARD);
 //        back.setDirection(DcMotor.Direction.REVERSE);
-//        left.setDirection(DcMotor.Direction.FORWARD);
+//
+        arm1.setDirection(DcMotor.Direction.REVERSE);
+        arm2.setDirection(DcMotor.Direction.REVERSE);
 
 
         // tell the driver that the robot is ready
@@ -67,7 +70,19 @@ public class TeleOp2024 extends LinearOpMode {
         double rightX = gamepad1.right_stick_x;
 
         e.MoveRobot(leftY,leftX,rightX);
-
+        boolean upButton = gamepad1.x;
+        boolean downButton = gamepad1.a;
+        if ( upButton){
+            arm1.setPower(1);
+            arm2.setPower(1);
+        }
+        else if (downButton){
+            arm1.setPower(-0.3);
+            arm2.setPower(-0.3);
+        }else{
+            arm1.setPower(0);
+            arm2.setPower(0);
+        }
 
         // send telemetry message to signify robot running
         // %.2f shows two decimal places
