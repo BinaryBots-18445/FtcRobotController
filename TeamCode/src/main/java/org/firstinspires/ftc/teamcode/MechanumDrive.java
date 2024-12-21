@@ -65,7 +65,7 @@ public class MechanumDrive extends DrivetrainBase{
 
         left.setPower(frontLeftPower);
         back.setPower(backLeftPower);
-        front.setPower(frontRightPower);
+        front.setPower(-frontRightPower);
         right.setPower(backRightPower);
     }
     public MechanumDrive(LinearOpMode opMode) {

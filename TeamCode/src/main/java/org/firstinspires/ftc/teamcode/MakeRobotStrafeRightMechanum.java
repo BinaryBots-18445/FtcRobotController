@@ -10,7 +10,7 @@ public class MakeRobotStrafeRightMechanum extends LinearOpMode{
     @Override
     public void runOpMode() throws InterruptedException {
         MechanumDrive e = new MechanumDrive(this);
-        e.MakeRobotStrafeRight(24000);
+        e.MakeRobotStrafeRight(24);
     }
 }
 

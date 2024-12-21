@@ -10,6 +10,6 @@ public class MechanumAutonomous extends LinearOpMode{
     @Override
     public void runOpMode() throws InterruptedException {
         MechanumDrive e = new MechanumDrive(this);
-        e.MoveRobotForwardInches(2400);
+        e.MoveRobotForwardInches(24);
     }
 }

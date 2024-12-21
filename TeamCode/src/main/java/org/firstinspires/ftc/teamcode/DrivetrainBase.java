@@ -105,8 +105,8 @@ public class  DrivetrainBase{
         // Note: The settings here assume direct drive on left and right wheels.  Gear Reduction or 90 Deg drives may require direction flips
         front.setDirection(DcMotor.Direction.FORWARD);
         right.setDirection(DcMotor.Direction.REVERSE);
-        back.setDirection(DcMotor.Direction.REVERSE);
-        left.setDirection(DcMotor.Direction.FORWARD);
+        back.setDirection(DcMotor.Direction.FORWARD);
+        left.setDirection(DcMotor.Direction.REVERSE);
 
         front.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -287,22 +287,22 @@ public class  DrivetrainBase{
                 right.setPower(rightSpeed);
                 back.setPower(backSpeed);
                 left.setPower(leftSpeed);
-                if (frontSpeed > backSpeed){
-                    front.setPower(frontSpeed - kp * error);
-                    back.setPower(backSpeed + kp * error);
-                }
-                if (backSpeed > frontSpeed){
-                    back.setPower(backSpeed - kp * error);
-                    front.setPower(frontSpeed + kp * error);
-                }
-                if (leftSpeed > rightSpeed){
-                    left.setPower(leftSpeed - kp * error);
-                    right.setPower(rightSpeed + kp * error);
-                }
-                if (rightSpeed > leftSpeed){
-                    right.setPower(rightSpeed - kp * error);
-                    left.setPower(leftSpeed + kp * error);
-                }
+//                if (frontSpeed > backSpeed){
+//                    front.setPower(frontSpeed - kp * error);
+//                    back.setPower(backSpeed + kp * error);
+//                }
+//                if (backSpeed > frontSpeed){
+//                    back.setPower(backSpeed - kp * error);
+//                    front.setPower(frontSpeed + kp * error);
+//                }
+//                if (leftSpeed > rightSpeed){
+//                    left.setPower(leftSpeed - kp * error);
+//                    right.setPower(rightSpeed + kp * error);
+//                }
+//                if (rightSpeed > leftSpeed){
+//                    right.setPower(rightSpeed - kp * error);
+//                    left.setPower(leftSpeed + kp * error);
+//                }
                 opMode.telemetry.addData(
                         "Are motors busy?",
                         "%b %b %b %b",
