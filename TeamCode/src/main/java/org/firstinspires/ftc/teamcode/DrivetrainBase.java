@@ -104,9 +104,9 @@ public class  DrivetrainBase{
         // Pushing the left stick forward MUST make robot go forward. So adjust these two lines based on your first test drive.
         // Note: The settings here assume direct drive on left and right wheels.  Gear Reduction or 90 Deg drives may require direction flips
         front.setDirection(DcMotor.Direction.FORWARD);
-        right.setDirection(DcMotor.Direction.REVERSE);
+        right.setDirection(DcMotor.Direction.FORWARD);
         back.setDirection(DcMotor.Direction.FORWARD);
-        left.setDirection(DcMotor.Direction.REVERSE);
+        left.setDirection(DcMotor.Direction.FORWARD);
 
         front.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

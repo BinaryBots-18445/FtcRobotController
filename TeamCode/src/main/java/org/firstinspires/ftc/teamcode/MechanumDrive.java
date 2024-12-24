@@ -16,7 +16,7 @@ public class MechanumDrive extends DrivetrainBase{
     }
 
     public void MoveRobotForwardInches(double inches) {
-        encoderDrive(20.0, DRIVE_SPEED, inches, inches, inches, inches);
+        encoderDrive(20.0, DRIVE_SPEED, inches, -inches, -inches, -inches);
     }
     public void MoveRobotForwardOrBackwardsPercent(double speed){
         front.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
