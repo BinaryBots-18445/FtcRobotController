@@ -23,7 +23,7 @@ public class FieldOrientedTeleOp extends LinearOpMode {
 //    LinearOpMode opMode;
 //    public FieldOrientedTeleOp(LinearOpMode opMode) {
 //        this.opMode = opMode;
-//    }
+//    } 
     // variables for motors
     // note: motors must be defined as member variables on the class
     //       so that they can be used by every function in the class
