@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 /**
  * Pushing the left  stick forward      makes the robot go forward
  * Pushing the left  stick backward     makes the robot go backward
- * Pushing the left  stick to the right makes the robot go to the right
+ * Pushing the left  stick to the right makes the robot go to the rig ht
  * Pushing the left  stick to the left  makes the robot go to the left
  * Pushing the right stick to the right makes the robot turn clockwise
  * Pushing the right stick to the left  makes the robot turn counter clockwise
