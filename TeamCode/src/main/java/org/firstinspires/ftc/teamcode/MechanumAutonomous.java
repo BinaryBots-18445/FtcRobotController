@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-@Autonomous(name="Make Robot Move Forward Mechanum")
+@Autonomous(name="Mecanum Autonomous")
 public class MechanumAutonomous extends LinearOpMode{
 
 

@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 public class MechanumDrive extends DrivetrainBase{
     public void MoveRobotBackwardsInches(double inches) {
-        encoderDrive(20.0, DRIVE_SPEED, -inches, -inches, -inches, -inches);
+        encoderDrive(20.0, DRIVE_SPEED, inches, inches, -inches, inches);
     }
     public void MakeRobotStrafeRight(double inches){
         encoderDrive(20.0, DRIVE_SPEED, inches, -inches, inches, -inches);
