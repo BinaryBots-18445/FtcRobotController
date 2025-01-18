@@ -73,14 +73,14 @@ public class TeleOp2024 extends LinearOpMode {
         boolean upButton = gamepad1.x;
         boolean downButton = gamepad1.a;
         if ( upButton) {
-            arm1.setPower(0.45);
-            arm2.setPower(0.7);
+            arm1.setPower(1);
+            arm2.setPower(1);
         }
         //down button is a on the game pad and up button is x on the game pad. when you press a both arms go down. when you press x both arms go up faster than they go down.
         //the if statements check if the two buttons on the gamepad are pressed and do the actions assigned to the button.
         else if (downButton){
-            arm1.setPower(-0.45);
-            arm2.setPower(-0.7);
+            arm1.setPower(-1);
+            arm2.setPower(-1);
         }else{
             arm1.setPower(0);
             arm2.setPower(0);
@@ -94,3 +94,4 @@ public class TeleOp2024 extends LinearOpMode {
         }
     }
 }
+
