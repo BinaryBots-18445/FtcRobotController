@@ -44,9 +44,9 @@ public class MechanumDrive extends DrivetrainBase{
         back.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         left.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         front.setPower(-speed);
-        right.setPower(-speed);
-        back.setPower(speed);
-        left.setPower(speed);
+        right.setPower(speed);
+        back.setPower(-speed);
+        left.setPower(-speed);
     }
 //    forward is going backwards and forward, right is strafing right and left, turning is turning right and left
 //    give forward positive number = go forward, if give negative = go backwards

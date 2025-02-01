@@ -2,8 +2,8 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-@Autonomous(name="Mecanum Autonomous With Parking")
-public class MechanumAutonomous extends LinearOpMode{
+@Autonomous(name="Mecanum Autonomous Without Parking")
+public class AutonomousWithoutParking extends LinearOpMode{
 
 
 
@@ -14,15 +14,14 @@ public class MechanumAutonomous extends LinearOpMode{
         e.MakeRobotStrafeRight(18);
         e.MoveRobotForwardInches(58);
         e.MakeRobotStrafeLeft(14);
-        e.MoveRobotBackwardsInches(54);
+        e.MoveRobotBackwardsInches(48);
+        e.MakeRobotStrafeRight(12);
+        e.MoveRobotBackwardsInches(12);
+        e.MakeRobotStrafeLeft(24);
+        e.MakeRobotStrafeRight(18);
         e.MoveRobotForwardInches(58);
-        e.MakeRobotStrafeLeft(10);
+        e.MakeRobotStrafeLeft(20);
         e.MoveRobotBackwardsInches(54);
-        e.MakeRobotStrafeRight(132);
-        e.MoveRobotBackwardsInches(14);
+
     }
 }
-//try 1: 2/4
-//try 2: 2/4
-//try 3: 2/4
-//try: 2/4
