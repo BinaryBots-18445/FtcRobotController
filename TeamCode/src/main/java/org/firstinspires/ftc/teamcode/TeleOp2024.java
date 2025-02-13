@@ -1,10 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 
 /**
@@ -22,9 +20,9 @@ public class TeleOp2024 extends LinearOpMode {
     // note: motors must be defined as member variables on the class
     //       so that they can be used by every function in the class
 
-    DcMotor arm1;
-    DcMotor arm2;
-    Servo arm3;
+    DcMotor climber;
+    DcMotor slide;
+    Servo claw;
     DcMotor arm4;
     MechanumDrive e;
 
@@ -39,16 +37,17 @@ public class TeleOp2024 extends LinearOpMode {
     public void runOpMode() {
         e = new MechanumDrive(this);
         // initialize motors
-        arm1 = hardwareMap.get(DcMotor.class, "arm1");
-        arm2 = hardwareMap.get(DcMotor.class, "arm2");
-        arm3 = hardwareMap.get(Servo.class, "arm3");
+        climber = hardwareMap.get(DcMotor.class, "climber");
+        slide = hardwareMap.get(DcMotor.class, "slide");
+        claw = hardwareMap.get(Servo.class, "claw");
         arm4 = hardwareMap.get(DcMotor.class, "arm4");
 
-        arm1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        arm2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        climber.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        slide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         arm4.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-//
+
+
 //
 //        // the motors on the left side of the robot need to be reversed
 //        // because their axles point in the opposite direction as the motors on the right side of the robot
@@ -56,8 +55,8 @@ public class TeleOp2024 extends LinearOpMode {
 //        right.setDirection(DcMotor.Direction.FORWARD);
 //        back.setDirection(DcMotor.Direction.REVERSE);
 //
-        arm1.setDirection(DcMotor.Direction.REVERSE);
-        arm2.setDirection(DcMotor.Direction.REVERSE);
+        climber.setDirection(DcMotor.Direction.FORWARD);
+        slide.setDirection(DcMotor.Direction.FORWARD);
 
 
         // tell the driver that the robot is ready
@@ -85,37 +84,57 @@ public class TeleOp2024 extends LinearOpMode {
         boolean downDpad = gamepad2.dpad_down;
         boolean clawOpen = gamepad2.a;
         boolean clawClose = gamepad2.b;
+        boolean leftBumper = gamepad2.left_bumper;
+        float leftTrigger = gamepad2.left_trigger;
         if (upButton1 > 0) {
-            arm1.setPower(1);
+            climber.setPower(1);
 
         }
         //down button is a on the game pad and up button is x on the game pad. when you press a both arms go down. when you press x both arms go up faster than they go down.
         //the if statements check if the two buttons on the gamepad are pressed and do the actions assigned to the button.
         else if (upButton1 < 0){
-            arm1.setPower(-1);
+            climber.setPower(-1);
 
 
         }else{
-            arm1.setPower(0);
-            arm2.setPower(0);
+            climber.setPower(0);
+//            arm2.setPower(0);
 
         }
         if (upDpad){
-            arm2.setPower(1);
+//            arm2.setPower(1);
+
+//            gamepad1.left_bumper
+//            gamepad2.left_trigger
+            if (slide.getCurrentPosition() < 7500) {
+                slide.setTargetPosition(slide.getCurrentPosition()+6000);
+                slide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                slide.setPower(1);
+            }
         }
         else if (downDpad){
-            arm2.setPower(-1);
+            if (slide.getCurrentPosition() < 7500) {
+                slide.setTargetPosition(slide.getCurrentPosition() - 6000);
+                slide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                slide.setPower(-1);
+            }
         }
         else {
-            arm1.setPower(0);
-            arm2.setPower(0);
+            climber.setPower(0);
+//            arm2.setPower(0);
 
         }
         if (clawOpen){
-            arm3.setPosition(180);
+            claw.setPosition(180);
         }
         if (clawClose){
-            arm3.setPosition(-180);
+            claw.setPosition(-180);
+        }
+        if (leftBumper){
+            slide.setPower(-1);
+        }
+        if (leftTrigger > 0){
+            slide.setPower(leftTrigger);
         }
         // send telemetry message to signify robot running
         // %.2f shows two decimal places
@@ -126,3 +145,4 @@ public class TeleOp2024 extends LinearOpMode {
     }
 }
 // water + water = robot fly because budgies exist and therefore robots should be able to fly - me
+
