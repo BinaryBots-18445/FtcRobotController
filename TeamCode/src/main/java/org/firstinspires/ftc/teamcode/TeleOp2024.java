@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -22,7 +23,7 @@ public class TeleOp2024 extends LinearOpMode {
 
     DcMotor climber;
     DcMotor slide;
-    Servo servo;
+    CRServo servo;
     DcMotor arm4;
     Servo claw;
     MechanumDrive e;
@@ -43,7 +44,7 @@ public class TeleOp2024 extends LinearOpMode {
         // initialize motors
         climber = hardwareMap.get(DcMotor.class, "climber");
         slide = hardwareMap.get(DcMotor.class, "slide");
-        servo = hardwareMap.get(Servo.class, "servo");
+        servo = hardwareMap.get(CRServo.class, "servo");
         claw = hardwareMap.get(Servo.class, "claw");
         arm4 = hardwareMap.get(DcMotor.class, "arm4");
 
@@ -121,16 +122,14 @@ public class TeleOp2024 extends LinearOpMode {
             claw.setPosition(-180);
         }
         if (servoDown){
-            if (servo.getPosition() <= 0){
-                servo.setPosition(0);
-            }
-            else{
-                servo.setPosition(-180);
-            }
+            servo.setPower(-1);
 
         }
         else if (servoUp){
-            servo.setPosition(180);
+            servo.setPower(1);
+        }
+        else{
+            servo.setPower(0);
         }
         // slide stuff
 
@@ -186,7 +185,7 @@ public class TeleOp2024 extends LinearOpMode {
         telemetry.addData("target position", "%d", slide.getTargetPosition());
         telemetry.addData("power", "%.2f", slide.getPower());
         telemetry.addData("current mode", "%s", slide.getMode().name());
-        telemetry.addData("servo current position", "%f m", servo.getPosition());
+        telemetry.addData("servo current position", "%f m", servo.getPower());
         telemetry.update();
         }
     }
