@@ -22,7 +22,7 @@ import com.qualcomm.robotcore.util.Range;
  */
 
 @TeleOp(name="Coin", group="Robot")
-
+@Disabled
 public class Coin extends OpMode{
 
     /* Declare OpMode members. */

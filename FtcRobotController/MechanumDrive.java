@@ -48,7 +48,7 @@ public class MechanumDrive extends DrivetrainBase{
         back.setPower(-speed);
         left.setPower(-speed);
     }
-//    forward is going backwards and forward, right is strafing right and left, turning is turning right and left
+    //    forward is going backwards and forward, right is strafing right and left, turning is turning right and left
 //    give forward positive number = go forward, if give negative = go backwards
 //    giving rightward a positive number makes it strafe right, if give negative = strafe left
 //    give clockwise positive = turn right, if give negative = turn left
