@@ -8,13 +8,13 @@ import com.qualcomm.robotcore.hardware.Servo;
 /**
  * Pushing the left  stick forward      makes the robot go forward
  * Pushing the left  stick backward     makes the robot go backward
- * Pushing the left  stick to the right makes the robot go to the rig ht
+ * Pushing the left  stick to the right makes the robot go to the right
  * Pushing the left  stick to the left  makes the robot go to the left
  * Pushing the right stick to the right makes the robot turn clockwise
  * Pushing the right stick to the left  makes the robot turn counter clockwise
  */
-@TeleOp(name="TeleOp2025", group="Robot")
-public class TeleOp2025 extends LinearOpMode {
+@TeleOp(name="OutReachBot2025", group="Robot")
+public class OutReachBot2025 extends LinearOpMode {
 
     // variables for motors
     // note: motors must be defined as member variables on the class
