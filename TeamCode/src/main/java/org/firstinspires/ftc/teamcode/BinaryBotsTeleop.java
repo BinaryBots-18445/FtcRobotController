@@ -88,7 +88,7 @@ public class BinaryBotsTeleop extends LinearOpMode {
 
                     telemetry.addData("April tag found: ",  detection.id);
                     telemetry.addLine(String.format("XYZ %6.1f %6.1f %6.1f  (inch)", 2, desiredTag.ftcPose.bearing, 2));
-//                    telemetry.addData("ftc ")
+
 //                    e.MoveRobot(desiredTag.ftcPose.range, 0,0);
 //                    telemetry.addLine(String.format("\n==== (ID %d) %s", desiredTag.id, desiredTag.metadata.name));
 //                    telemetry.addLine(String.format("XYZ %6.1f %6.1f %6.1f  (inch)", desiredTag.ftcPose.x, desiredTag.ftcPose.y, desiredTag.ftcPose.z));
@@ -140,11 +140,14 @@ public class BinaryBotsTeleop extends LinearOpMode {
         boolean aPressedLast = gamepad1.a;
         boolean shooterButton = gamepad2.a;
         boolean agitatorButton = gamepad2.b;
+        boolean feederButton = gamepad2.left_bumper;
         boolean rb2PressedLast = gamepad2.right_bumper;
         boolean y2PressedLast = gamepad2.y;
         boolean shooterStart = false;
         boolean aStart = false;
         boolean b2pressedLast = gamepad2.b;
+        boolean lb2PressedLast = gamepad2.left_bumper;
+        boolean fStart = false;
 
         double leftY = gamepad1.left_stick_y;
         double leftX = -gamepad1.left_stick_x;
@@ -192,6 +195,16 @@ public class BinaryBotsTeleop extends LinearOpMode {
                 hc.agitator.setPower(-1);
             }else{
                 hc.agitator.setPower(0);
+            }
+            if (gamepad2.left_bumper && !lb2PressedLast){
+                fStart = !fStart;
+            }
+            lb2PressedLast = gamepad2.left_bumper;
+            if (fStart){
+                hc.feeder.setPower(-1);
+            }else{
+                hc.feeder.setPower(0);
+
             }
         }
             telemetry.update();

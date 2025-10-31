@@ -73,6 +73,7 @@ public class HardwareControl {
     private DcMotorEx backright = null;
     protected DcMotor shooter = null;
     protected CRServo agitator = null;
+    protected DcMotor feeder = null;
     LinearOpMode opMode;
     //counts per motor rev means the number the encoder gives you when the shaft of the motor completes one full turn/revolution
     //https://www.andymark.com/products/neverest-classic-40-gearmotor
@@ -103,7 +104,7 @@ public class HardwareControl {
         backright = opMode.hardwareMap.get(DcMotorEx.class, "backright");
         shooter = opMode.hardwareMap.get(DcMotorEx.class, "shooter");
         agitator = opMode.hardwareMap.get(CRServo.class, "agitator");
-
+        feeder = opMode.hardwareMap.get(DcMotorEx.class, "feeder");
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
         // Pushing the left stick forward MUST make robot go forward. So adjust these two lines based on your first test drive.
         // Note: The settings here assume direct drive on left and right wheels.  Gear Reduction or 90 Deg drives may require direction flips
@@ -128,7 +129,7 @@ public class HardwareControl {
         backleft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backright.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         shooter.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
+        feeder.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         // Send telemetry message to indicate successful Encoder reset
         opMode.telemetry.addData(
                 "Starting position",
