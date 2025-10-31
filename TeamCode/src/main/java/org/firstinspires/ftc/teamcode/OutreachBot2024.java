@@ -32,7 +32,6 @@ public class OutreachBot2024 extends OpMode {
     double x;
     public void init() {
         // Define and Initialize Motor
-        //Dear robot, why wont you work???,i need you rn, plz btfm,youre my little pookie ber, we care about youz,ur lovd!
         x=0;
         frontLeft = hardwareMap.get(DcMotor.class, "LF");
         backLeft = hardwareMap.get(DcMotor.class, "LB");
