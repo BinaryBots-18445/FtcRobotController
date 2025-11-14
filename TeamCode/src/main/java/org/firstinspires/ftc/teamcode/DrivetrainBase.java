@@ -55,7 +55,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
  */
 
 public class  DrivetrainBase{
-    IMU imu;
+//    IMU imu;
     Orientation angles;
     Acceleration gravity;
     // E is basically strife driving + eventual other things probably <<33
@@ -140,37 +140,17 @@ public class  DrivetrainBase{
 //        imu.initialize(parameters);
 //        imu.startAccelerationIntegration(new Position(), new Velocity(), 50);
         // Wait for the game to start (driver presses PLAY)
-        imu = opMode.hardwareMap.get(IMU.class, "imu");
+//        imu = opMode.hardwareMap.get(IMU.class, "imu");
         RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.UP;
         RevHubOrientationOnRobot.UsbFacingDirection  usbDirection  = RevHubOrientationOnRobot.UsbFacingDirection.RIGHT;
         RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbDirection);
-        imu.initialize(new IMU.Parameters(orientationOnRobot));
+//        imu.initialize(new IMU.Parameters(orientationOnRobot));
         opMode.waitForStart();
 
         opMode.telemetry.addData("Path", "Starting");
         opMode.telemetry.update();
 
-        // Step through each leg of the path,
-        // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        //the full wheel is 360 degrees, so therefore, the interval in between each vaguely triangle things is 40 degrees,
-        //so to get 90 degrees, you have to rotate the wheel 2 1/4 sideways wheels.
 
-//        encoderDrive(20.0, DRIVE_SPEED,  0,  24, 0,24);
-        //encoderDrive(20.0, DRIVE_SPEED,  24,  0, 24,0);
-        //encoderDrive(20.0, DRIVE_SPEED,  0,  -24, 0,-24);
-        //encoderDrive(20.0, DRIVE_SPEED,  -24,  0, -24,0);
-        //encoderDrive(20.0, DRIVE_SPEED,  0,  24, 0,24);
-//        encoderDrive(20.0, TURN_SPEED,  robotDegreesToWheelInches(90),  robotDegreesToWheelInches(-90), robotDegreesToWheelInches(-90),robotDegreesToWheelInches(90));
-//        encoderDrive(20.0, DRIVE_SPEED,  degreesToInches(90),  degreesToInches(-90), degreesToInches(-90),degreesToInches(90));
-        //encoderDrive(20.0, DRIVE_SPEED,  0,  24, 0,24);
-//        encoderDrive(20.0, DRIVE_SPEED,  5,  5, 5,5);
-        //encoderDrive(20.0, DRIVE_SPEED,  0,  24, 0,24);
-//        encoderDrive(20.0, DRIVE_SPEED,  5,  5, 5,5);
-        //encoderDrive(20.0, DRIVE_SPEED,  0,  24, 0,24);
-//        encoderDrive(20.0, DRIVE_SPEED,  5,  5, 5,5);
-        // S1: Forward 47 Inches with 5 Sec timeout
-        //(DRIVE_SPEED,   0, 0, 12, 0);  // S2: Turn Right 12 Inches with 4 Sec timeout
-        //encoderDrive(DRIVE_SPEED, -24, -24, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
 
         opMode.telemetry.addData("Path", "Complete");
         opMode.telemetry.update();
@@ -185,11 +165,11 @@ public class  DrivetrainBase{
 
 
 
-    protected double getGyroHeading() {
-        YawPitchRollAngles angles = imu.getRobotYawPitchRollAngles();
-        double convertedDegrees = angles.getYaw(AngleUnit.DEGREES);
-        return convertedDegrees;
-    }
+//    protected double getGyroHeading() {
+//        YawPitchRollAngles angles = imu.getRobotYawPitchRollAngles();
+//        double convertedDegrees = angles.getYaw(AngleUnit.DEGREES);
+//        return convertedDegrees;
+//    }
 
 
 
@@ -271,8 +251,8 @@ public class  DrivetrainBase{
 //                    runtime.seconds(),
 //                    timeoutS);
 
-                double error = -1 * getGyroHeading();
-                double kp = 1.0/180;
+//                double error = -1 * getGyroHeading();
+//                double kp = 1.0/180;
                 double frontSpeed = speed;
                 double rightSpeed = speed;
                 double backSpeed = speed;
@@ -366,11 +346,11 @@ public class  DrivetrainBase{
                         frontright.getPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION).f,
                         backleft.getPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION).f,
                         backright.getPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION).f);
-                opMode.telemetry.addData(
-                        "heading",
-                        "%2f",
-                        getGyroHeading() * -1
-                );
+//                opMode.telemetry.addData(
+//                        "heading",
+//                        "%2f",
+//                        getGyroHeading() * -1
+//                );
                 opMode.telemetry.update();
             } while (opMode.opModeIsActive() &&
                     (runtime.seconds() < timeoutS) &&
@@ -399,16 +379,16 @@ public class  DrivetrainBase{
     //n/(360/9)*(90.0/25.4*pi)/9
     //to do a 180 degree, you have to substitute 180 in as n in this equation(n/(360/9)*(90.0/25.4*pi)/9
     //and that turns out to roughly 5.6 inches for a 180 degree turn
-    protected double wheelDegreesToWheelInches(double degrees) {
-        //return degrees/(360.0/9.0)*(90.0/25.4*Math.PI)/9;
-        return (degrees / 360.0) * (90.0 / 25.4 * Math.PI);
-    }
-
-    //8.5 inches is the diameter of the circle that the wheels make
-    //8.5(pi)/(360/degrees)
-    //we get the amount of inches the wheels need to turn by dividing 360 by the desired amount of degrees
-    protected double robotDegreesToWheelInches(double degrees) {
-        return (8.5 * Math.PI) / (360 / degrees);
-    }
+//    protected double wheelDegreesToWheelInches(double degrees) {
+//        //return degrees/(360.0/9.0)*(90.0/25.4*Math.PI)/9;
+//        return (degrees / 360.0) * (90.0 / 25.4 * Math.PI);
+//    }
+//
+//    //8.5 inches is the diameter of the circle that the wheels make
+//    //8.5(pi)/(360/degrees)
+//    //we get the amount of inches the wheels need to turn by dividing 360 by the desired amount of degrees
+//    protected double robotDegreesToWheelInches(double degrees) {
+//        return (8.5 * Math.PI) / (360 / degrees);
+//    }
 }
 

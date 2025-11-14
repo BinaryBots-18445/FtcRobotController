@@ -59,7 +59,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
  */
 
 
-public class HardwareControl {
+public class HardwareControlDP {
     BNO055IMU imu;
     Orientation angles;
     Acceleration gravity;
@@ -71,9 +71,7 @@ public class HardwareControl {
     protected DcMotorEx frontright = null;
     protected DcMotorEx backleft = null;
     protected DcMotorEx backright = null;
-    protected DcMotor shooter = null;
-    protected CRServo agitator = null;
-    protected DcMotor feeder = null;
+
     LinearOpMode opMode;
     //counts per motor rev means the number the encoder gives you when the shaft of the motor completes one full turn/revolution
     //https://www.andymark.com/products/neverest-classic-40-gearmotor
@@ -89,7 +87,7 @@ public class HardwareControl {
     public static final double TURN_SPEED = 0.5;
 
 
-    public HardwareControl(LinearOpMode opMode) {
+    public HardwareControlDP(LinearOpMode opMode) {
         this.opMode = opMode;
         opMode.telemetry.setMsTransmissionInterval(50);
         opMode.telemetry.addData("Status", "Initialized");
@@ -102,9 +100,7 @@ public class HardwareControl {
         frontright = opMode.hardwareMap.get(DcMotorEx.class, "frontright");
         backleft = opMode.hardwareMap.get(DcMotorEx.class, "backleft");
         backright = opMode.hardwareMap.get(DcMotorEx.class, "backright");
-        shooter = opMode.hardwareMap.get(DcMotorEx.class, "shooter");
-        agitator = opMode.hardwareMap.get(CRServo.class, "agitator");
-        feeder = opMode.hardwareMap.get(DcMotorEx.class, "feeder");
+
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
         // Pushing the left stick forward MUST make robot go forward. So adjust these two lines based on your first test drive.
         // Note: The settings here assume direct drive on left and right wheels.  Gear Reduction or 90 Deg drives may require direction flips
@@ -128,8 +124,7 @@ public class HardwareControl {
         frontright.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backleft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backright.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        shooter.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        feeder.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         // Send telemetry message to indicate successful Encoder reset
         opMode.telemetry.addData(
                 "Starting position",
@@ -140,16 +135,16 @@ public class HardwareControl {
                 backright.getCurrentPosition()
         );
         opMode.telemetry.update();
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
-        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample OpMode
-        parameters.loggingEnabled = true;
-        parameters.loggingTag = "IMU";
-        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
-        imu = opMode.hardwareMap.get(BNO055IMU.class, "imu");
-        imu.initialize(parameters);
-        imu.startAccelerationIntegration(new Position(), new Velocity(), 50);
+//        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+//        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+//        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+//        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample OpMode
+//        parameters.loggingEnabled = true;
+//        parameters.loggingTag = "IMU";
+//        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+//        imu = opMode.hardwareMap.get(BNO055IMU.class, "imu");
+//        imu.initialize(parameters);
+//        imu.startAccelerationIntegration(new Position(), new Velocity(), 50);
         // Wait for the game to start (driver presses PLAY)
         opMode.waitForStart();
 
@@ -498,3 +493,4 @@ public class HardwareControl {
         return (8.5 * Math.PI) / (360 / degrees);
     }
 }
+

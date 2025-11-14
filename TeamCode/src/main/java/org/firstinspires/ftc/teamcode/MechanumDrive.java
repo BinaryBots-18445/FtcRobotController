@@ -22,41 +22,41 @@ public class MechanumDrive extends DrivetrainBase{
             backleft.setPower((-TURN_SPEED));
             backright.setPower((TURN_SPEED));
             while (opMode.opModeIsActive()) {
-                double heading = -1 * getGyroHeading();
-                double error = degrees - heading;
-//                accError += error;
-                double power = Kp * error + Kd * (error - Perror);
-                if (Math.abs(power) < minPower){
-                    if(power > 0){
-                        power = minPower;
-                    }
-                    else{
-                        power = -minPower;
-                    }
-                }
-                Perror = error;
-                if (degrees < 0) {
-                    spinTurnWithPower(-power);
-                } else {
-                    spinTurnWithPower(power);
-                }
+//                double heading = -1 * getGyroHeading();
+//                double error = degrees - heading;
+////                accError += error;
+//                double power = Kp * error + Kd * (error - Perror);
+//                if (Math.abs(power) < minPower){
+//                    if(power > 0){
+//                        power = minPower;
+//                    }
+//                    else{
+//                        power = -minPower;
+//                    }
+//                }
+//                Perror = error;
+//                if (degrees < 0) {
+//                    spinTurnWithPower(-power);
+//                } else {
+//                    spinTurnWithPower(power);
+//                }
 
-
-                if (Math.abs(error) < tolerance) {
-                    frontleft.setPower(0);
-                    frontright.setPower(0);
-                    backleft.setPower(0);
-                    backright.setPower(0);
-                    break;
-
-                }
-
-
-                opMode.telemetry.addData(
-                        "heading",
-                        "%2f",
-                        heading
-                );
+//
+//                if (Math.abs(error) < tolerance) {
+//                    frontleft.setPower(0);
+//                    frontright.setPower(0);
+//                    backleft.setPower(0);
+//                    backright.setPower(0);
+//                    break;
+//
+//                }
+//
+//
+//                opMode.telemetry.addData(
+//                        "heading",
+//                        "%2f",
+//                        heading
+//                );
 
                 opMode.telemetry.addData(
                         "velocity",

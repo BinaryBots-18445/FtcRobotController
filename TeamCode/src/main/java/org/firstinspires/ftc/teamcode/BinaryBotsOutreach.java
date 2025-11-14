@@ -19,15 +19,15 @@ import java.util.List;
  */
 
 
-@TeleOp(name="BinaryBotsTeleop2025-2026", group="Robot")
-public class BinaryBotsTeleop extends LinearOpMode {
+@TeleOp(name="BinaryBotsOutreach2025-2026", group="Robot")
+public class BinaryBotsOutreach extends LinearOpMode {
 
     // variables for motors
     // note: motors must be defined as member variables on the class
     //       so that they can be used by every function in the class
 
     MechanumDrive md;
-    HardwareControl hc;
+    HardwareControlDP hcd;
     AprilTagDetection myAprilTagDetection;
 
     private AprilTagProcessor aprilTag;
@@ -39,7 +39,6 @@ public class BinaryBotsTeleop extends LinearOpMode {
     VisionPortal visionPortal;
 
 
-
     private void initAprilTag() {
         // Create the AprilTag processor by using a builder.
         aprilTag = new AprilTagProcessor.Builder()
@@ -47,7 +46,7 @@ public class BinaryBotsTeleop extends LinearOpMode {
                 .setDrawCubeProjection(true)
                 .setDrawTagID(true)
                 .setDrawTagOutline(true)
-                .setLensIntrinsics(736.342,736.342,371.36,277.445)
+                .setLensIntrinsics(736.342, 736.342, 371.36, 277.445)
                 .build();
         // Adjust Image Decimation to trade-off detection-range for detection-rate.
         // e.g. Some typical detection data using a Logitech C920 WebCam
@@ -72,6 +71,7 @@ public class BinaryBotsTeleop extends LinearOpMode {
                     .build();
         }
     }
+
     private void telemetryAprilTag() {
 
         List<AprilTagDetection> currentDetections = aprilTag.getDetections();
@@ -80,14 +80,14 @@ public class BinaryBotsTeleop extends LinearOpMode {
         // Step through the list of detections and display info for each one.
         for (AprilTagDetection detection : currentDetections) {
 //            if (detection.metadata != null) {
-                if (detection.id == DESIRED_TAG_ID) {
-                    // This is the tag we want to move towards
-                    targetFound = true;
-                    // Set here so that we know which tag is detected.
-                    desiredTag = detection;
+            if (detection.id == DESIRED_TAG_ID) {
+                // This is the tag we want to move towards
+                targetFound = true;
+                // Set here so that we know which tag is detected.
+                desiredTag = detection;
 
-                    telemetry.addData("April tag found: ",  detection.id);
-                    telemetry.addLine(String.format("XYZ %6.1f %6.1f %6.1f  (inch)", 2, desiredTag.ftcPose.bearing, 2));
+                telemetry.addData("April tag found: ", detection.id);
+                telemetry.addLine(String.format("XYZ %6.1f %6.1f %6.1f  (inch)", 2, desiredTag.ftcPose.bearing, 2));
 
 //                    e.MoveRobot(desiredTag.ftcPose.range, 0,0);
 //                    telemetry.addLine(String.format("\n==== (ID %d) %s", desiredTag.id, desiredTag.metadata.name));
@@ -101,14 +101,14 @@ public class BinaryBotsTeleop extends LinearOpMode {
 
 //
 
-                    sleep(1000);
-                } else {
-                    // This tag is in the library, but we do not want to track it right now.
-                    targetFound = false;
-                    telemetry.addData("Skipping", "Tag ID %d is not desired", detection.id);
-                }
+                sleep(1000);
+            } else {
+                // This tag is in the library, but we do not want to track it right now.
+                targetFound = false;
+                telemetry.addData("Skipping", "Tag ID %d is not desired", detection.id);
             }
-      //  }
+        }
+        //  }
     }
 
 
@@ -124,7 +124,7 @@ public class BinaryBotsTeleop extends LinearOpMode {
         telemetry.update();
         waitForStart();
         md = new MechanumDrive(this);
-        hc = new HardwareControl(this);
+        hcd = new HardwareControlDP(this);
 
         // tell the driver that the robot is ready
         telemetry.addData(">", "Robot Ready. Press Play.");
@@ -135,90 +135,10 @@ public class BinaryBotsTeleop extends LinearOpMode {
          * This function stops when the driver presses the STOP button on the driver station.
          * This function is called REPEATEDLY.
          */
-        boolean slowMode = false;
-        boolean shooterSlow = false;
-        boolean aPressedLast = gamepad1.a;
-        boolean shooterButton = gamepad2.a;
-        boolean agitatorButton = gamepad2.b;
-        boolean feederButton = gamepad2.left_bumper;
-        boolean x2PressedLast = gamepad2.x;
-        boolean rb2PressedLast = gamepad2.right_bumper;
-        boolean y2PressedLast = gamepad2.y;
-        boolean shooterStart = false;
-        boolean aStart = false;
-        boolean b2pressedLast = gamepad2.b;
-        boolean a2PressedLast = gamepad2.a;
-        boolean fStart = false;
-        boolean lb2PressedLast = gamepad2.left_bumper;
-        double leftY = gamepad1.left_stick_y;
-        double leftX = -gamepad1.left_stick_x;
-        double rightX = gamepad1.right_stick_x;
-        double shooterSpeed = 0.7;
-        while(opModeIsActive()) {
-//            telemetryAprilTag();
-            //telemetry.update();
-            sleep(20);
-            leftY = gamepad1.left_stick_y;
-            leftX = -gamepad1.left_stick_x;
-            rightX = gamepad1.right_stick_x;
-            shooterButton = gamepad2.a;
-            agitatorButton = gamepad2.b;
-            if (gamepad1.a && !aPressedLast) {
-                slowMode = !slowMode; //toggle
-            }
-            aPressedLast = gamepad1.a;
 
-
-            double speedMultiplier = slowMode ? 0.3 : 1.0;
-            double shooterMultiplier = shooterSlow ? 0.7 : 0.9;
-            md.MoveRobot(leftY, leftX, rightX, speedMultiplier);
-            telemetry.addData("current speed", speedMultiplier);
-            telemetry.addData("shooter speed", shooterSpeed);
-            telemetry.update();
-            if (gamepad2.right_bumper && !rb2PressedLast) {
-                shooterSpeed = 0.7;
-            }
-            rb2PressedLast = gamepad2.right_bumper;
-            if (gamepad2.y && !y2PressedLast) {
-                shooterStart = !shooterStart;
-            }
-
-            if (gamepad2.x && !x2PressedLast) {
-                shooterSpeed = 0.8;
-            }
-            x2PressedLast = gamepad2.right_bumper;
-            if (gamepad2.left_bumper && !lb2PressedLast) {
-                shooterSpeed = 0.9;
-            }
-            lb2PressedLast = gamepad2.right_bumper;
-            y2PressedLast = gamepad2.y;
-            if (shooterStart) {
-                hc.shooter.setPower(-shooterSpeed);
-            }else{
-                hc.shooter.setPower(0);
-
-            }
-            if (gamepad2.b && !b2pressedLast){
-                aStart = !aStart;
-            }
-            b2pressedLast = gamepad2.b;
-            if (aStart){
-                hc.agitator.setPower(1);
-            }else{
-                hc.agitator.setPower(0);
-            }
-            if (gamepad2.a && !a2PressedLast){
-                fStart = !fStart;
-            }
-            a2PressedLast = gamepad2.a;
-            if (fStart){
-                hc.feeder.setPower(-1);
-            }else{
-                hc.feeder.setPower(0);
-            }
-        }
+        while (opModeIsActive()) {
+            md.MoveRobot(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x,1);
             telemetry.update();
         }
     }
-
-
+}
