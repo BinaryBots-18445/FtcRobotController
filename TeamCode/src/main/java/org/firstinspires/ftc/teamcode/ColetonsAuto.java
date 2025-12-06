@@ -1,19 +1,13 @@
 package org.firstinspires.ftc.teamcode;
 
-import android.service.autofill.LuhnChecksumValidator;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.util.ClassUtil;
 
 
 
 @Autonomous (name = "Coleton's Auto", group = "Robot")
 public class ColetonsAuto extends LinearOpMode {
-    public void shootArtifacts(double inches){
-        hc.shooter.setPower(inches);
-        System.out.println("Shooter Power: " + hc.shooter.getPower());
-    }
     MechanumDrive md;
     HardwareControl hc;
     static double RPM = 6000;
@@ -33,6 +27,7 @@ public class ColetonsAuto extends LinearOpMode {
         System.out.println("Feeder Power: " + feederPower);
         sleep(1500);
         hc.feeder.setPower(0);
+        System.out.println("Shot Artifact");
     }
 
     public void runOpMode() {
