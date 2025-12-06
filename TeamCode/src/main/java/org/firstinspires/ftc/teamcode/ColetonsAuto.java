@@ -13,6 +13,7 @@ public class ColetonsAuto extends LinearOpMode {
     static double RPM = 6000;
 
     public void shootArtifacts(){
+        System.out.println("Preparing Launcher");
         hc.shooter.setPower(-0.9);
         double launchingPower = hc.shooter.getPower();
         System.out.println("Shooter Power: " + launchingPower);
@@ -37,6 +38,7 @@ public class ColetonsAuto extends LinearOpMode {
         md.MoveRobotForwardInches(30);
         while(opModeIsActive()) {
             shootArtifacts();
+            System.out.println(RPM * 0.9);
         }
     }
 }
