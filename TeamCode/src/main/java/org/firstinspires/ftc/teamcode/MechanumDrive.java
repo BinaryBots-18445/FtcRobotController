@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 public class MechanumDrive extends DrivetrainBase{
+
     public void turnWithGyro(double degrees, double tolerance) {
         if (opMode.opModeIsActive()) {
             double Kp = 1.0 / degrees;
@@ -83,7 +84,7 @@ public class MechanumDrive extends DrivetrainBase{
 
     }
     public void MoveRobotBackwardsInches(double inches) {
-        encoderDrive(20.0, DRIVE_SPEED, -inches, inches, inches, inches);
+        encoderDrive(20.0, DRIVE_SPEED, inches * 0.8, inches * 0.8, inches * 0.8, inches);
     }
     public void spinTurnWithPower(double power) {
         frontleft.setPower((power));
@@ -157,8 +158,10 @@ public class MechanumDrive extends DrivetrainBase{
         super(opMode);
         frontleft.setDirection(DcMotor.Direction.REVERSE);
         frontright.setDirection(DcMotor.Direction.FORWARD);
-        backleft.setDirection(DcMotor.Direction.REVERSE);
-        backright.setDirection(DcMotor.Direction.FORWARD);
+        backleft.setDirection(DcMotor.Direction.FORWARD);
+        backright.setDirection(DcMotor.Direction.REVERSE);
     }
+
+
 }
 // # budgies

@@ -80,12 +80,12 @@ public class HardwareControl {
 
     static final double COUNTS_PER_MOTOR_REV = 288;    // eg: TETRIX Motor Encoder
     static final double DRIVE_GEAR_REDUCTION = 1;     // No External Gearing.
-    //https://www.revrobotics.com/DUO-Omni-Wheels/ 90mm convert to inches
-    static final double WHEEL_DIAMETER_INCHES = 90.0 / 25.4;     // For figuring circumference
+    //mecanum wheel dimensions: 75mm convert to inches
+    static final double WHEEL_DIAMETER_INCHES = 75.0 / 25.4;     // For figuring circumference
 
 
     static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * 3.1415);
-    public static final double DRIVE_SPEED = 0.8;
+    public static final double DRIVE_SPEED = 1.0;
     public static final double TURN_SPEED = 0.5;
 
 
@@ -110,8 +110,8 @@ public class HardwareControl {
         // Note: The settings here assume direct drive on left and right wheels.  Gear Reduction or 90 Deg drives may require direction flips
         frontleft.setDirection(DcMotor.Direction.REVERSE);
         frontright.setDirection(DcMotor.Direction.FORWARD);
-        backleft.setDirection(DcMotor.Direction.REVERSE);
-        backright.setDirection(DcMotor.Direction.FORWARD);
+        backleft.setDirection(DcMotor.Direction.FORWARD);
+        backright.setDirection(DcMotor.Direction.REVERSE);
 
         frontleft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         frontright.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

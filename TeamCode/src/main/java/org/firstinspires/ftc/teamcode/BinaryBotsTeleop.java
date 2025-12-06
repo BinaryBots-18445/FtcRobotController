@@ -31,9 +31,9 @@ public class BinaryBotsTeleop extends LinearOpMode {
     AprilTagDetection myAprilTagDetection;
 
     private AprilTagProcessor aprilTag;
-    private static final boolean USE_WEBCAM = false; // Used for managing the AprilTag detection process.
+    private static final boolean USE_WEBCAM = true; // Used for managing the AprilTag detection process.
     private AprilTagDetection desiredTag = null;
-    private static final int DESIRED_TAG_ID = 21;
+    private static final int DESIRED_TAG_ID = 21 ;
     double myAprilTagDetections;
     boolean targetFound = false;
     VisionPortal visionPortal;
@@ -89,14 +89,14 @@ public class BinaryBotsTeleop extends LinearOpMode {
                     telemetry.addData("April tag found: ",  detection.id);
                     telemetry.addLine(String.format("XYZ %6.1f %6.1f %6.1f  (inch)", 2, desiredTag.ftcPose.bearing, 2));
 
-//                    e.MoveRobot(desiredTag.ftcPose.range, 0,0);
-//                    telemetry.addLine(String.format("\n==== (ID %d) %s", desiredTag.id, desiredTag.metadata.name));
-//                    telemetry.addLine(String.format("XYZ %6.1f %6.1f %6.1f  (inch)", desiredTag.ftcPose.x, desiredTag.ftcPose.y, desiredTag.ftcPose.z));
-//                    telemetry.addLine(String.format("PRY %6.1f %6.1f %6.1f  (deg)", desiredTag.ftcPose.pitch, desiredTag.ftcPose.roll, desiredTag.ftcPose.yaw));
-//                    telemetry.addLine(String.format("RBE %6.1f %6.1f %6.1f  (inch, deg, deg)", desiredTag.ftcPose.range, desiredTag.ftcPose.bearing, desiredTag.ftcPose.elevation));        // Add "key" information to telemetry
-//                    telemetry.addLine("\nkey:\nXYZ = X (Right), Y (Forward), Z (Up) dist.");
-//                    telemetry.addLine("PRY = Pitch, Roll & Yaw (XYZ Rotation)");
-//                    telemetry.addLine("RBE = Range, Bearing & Elevation");
+                    md.MoveRobot(desiredTag.ftcPose.range, 0,0,1);
+                    telemetry.addLine(String.format("\n==== (ID %d) %s", desiredTag.id, desiredTag.metadata.name));
+                    telemetry.addLine(String.format("XYZ %6.1f %6.1f %6.1f  (inch)", desiredTag.ftcPose.x, desiredTag.ftcPose.y, desiredTag.ftcPose.z));
+                    telemetry.addLine(String.format("PRY %6.1f %6.1f %6.1f  (deg)", desiredTag.ftcPose.pitch, desiredTag.ftcPose.roll, desiredTag.ftcPose.yaw));
+                    telemetry.addLine(String.format("RBE %6.1f %6.1f %6.1f  (inch, deg, deg)", desiredTag.ftcPose.range, desiredTag.ftcPose.bearing, desiredTag.ftcPose.elevation));        // Add "key" information to telemetry
+                    telemetry.addLine("\nkey:\nXYZ = X (Right), Y (Forward), Z (Up) dist.");
+                    telemetry.addLine("PRY = Pitch, Roll & Yaw (XYZ Rotation)");
+                    telemetry.addLine("RBE = Range, Bearing & Elevation");
 
 
 //
@@ -118,7 +118,7 @@ public class BinaryBotsTeleop extends LinearOpMode {
      * This function initializes the motors so that they can be used in the loop function.
      */
     public void runOpMode() {
-//        initAprilTag();
+        initAprilTag();
         telemetry.addData("DS preview on/off", "3 dots, Camera Stream");
         telemetry.addData(">", "Touch START to start OpMode");
         telemetry.update();
@@ -169,7 +169,7 @@ public class BinaryBotsTeleop extends LinearOpMode {
             aPressedLast = gamepad1.a;
 
 
-            double speedMultiplier = slowMode ? 0.3 : 1.0;
+            double speedMultiplier = slowMode ? 0.5 : 1.0;
             double shooterMultiplier = shooterSlow ? 0.7 : 0.9;
             md.MoveRobot(leftY, leftX, rightX, speedMultiplier);
             telemetry.addData("current speed", speedMultiplier);
