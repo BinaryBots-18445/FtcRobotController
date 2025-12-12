@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -37,6 +38,9 @@ public class BinaryBotsTeleop extends LinearOpMode {
     double myAprilTagDetections;
     boolean targetFound = false;
     VisionPortal visionPortal;
+    private static final int bankVelocity = 1600;
+    private static final int farVelocity = 1900;
+    private static final int maxVelocity = 2200;
 
 
 
@@ -153,7 +157,7 @@ public class BinaryBotsTeleop extends LinearOpMode {
         double leftY = gamepad1.left_stick_y;
         double leftX = -gamepad1.left_stick_x;
         double rightX = gamepad1.right_stick_x;
-        double shooterSpeed = 0.7;
+        double shooterVelocity = 1900;
         while(opModeIsActive()) {
 //            telemetryAprilTag();
             //telemetry.update();
@@ -173,10 +177,10 @@ public class BinaryBotsTeleop extends LinearOpMode {
             double shooterMultiplier = shooterSlow ? 0.7 : 0.9;
             md.MoveRobot(leftY, leftX, rightX, speedMultiplier);
             telemetry.addData("current speed", speedMultiplier);
-            telemetry.addData("shooter speed", shooterSpeed);
+            telemetry.addData("shooter speed", shooterVelocity);
             telemetry.update();
             if (gamepad2.right_bumper && !rb2PressedLast) {
-                shooterSpeed = 0.7;
+                shooterVelocity = bankVelocity;
             }
             rb2PressedLast = gamepad2.right_bumper;
             if (gamepad2.y && !y2PressedLast) {
@@ -184,19 +188,18 @@ public class BinaryBotsTeleop extends LinearOpMode {
             }
 
             if (gamepad2.x && !x2PressedLast) {
-                shooterSpeed = 0.8;
+                shooterVelocity = farVelocity;
             }
             x2PressedLast = gamepad2.right_bumper;
             if (gamepad2.left_bumper && !lb2PressedLast) {
-                shooterSpeed = 0.9;
+                shooterVelocity = maxVelocity;
             }
             lb2PressedLast = gamepad2.right_bumper;
             y2PressedLast = gamepad2.y;
             if (shooterStart) {
-                hc.shooter.setPower(-shooterSpeed);
+                ((DcMotorEx) hc.shooter).setVelocity(-shooterVelocity);
             }else{
                 hc.shooter.setPower(0);
-
             }
             if (gamepad2.b && !b2pressedLast){
                 aStart = !aStart;

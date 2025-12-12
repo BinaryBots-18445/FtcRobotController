@@ -107,7 +107,6 @@ public class  DrivetrainBase{
         frontright.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backleft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backright.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
         // note from raymond: maybe we should use RUN_TO_POSITION instead?
         frontleft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         frontright.setMode(DcMotor.RunMode.RUN_USING_ENCODER);

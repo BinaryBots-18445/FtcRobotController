@@ -84,7 +84,7 @@ public class MechanumDrive extends DrivetrainBase{
 
     }
     public void MoveRobotBackwardsInches(double inches) {
-        encoderDrive(20.0, DRIVE_SPEED, inches * 0.8, inches * 0.8, inches * 0.8, inches);
+        encoderDrive(20.0, DRIVE_SPEED, inches * 0.8, inches * 0.8, inches * 0.8F, inches);
     }
     public void spinTurnWithPower(double power) {
         frontleft.setPower((power));
