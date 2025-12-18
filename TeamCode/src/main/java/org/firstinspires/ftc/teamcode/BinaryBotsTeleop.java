@@ -38,9 +38,10 @@ public class BinaryBotsTeleop extends LinearOpMode {
     double myAprilTagDetections;
     boolean targetFound = false;
     VisionPortal visionPortal;
-    private static final int bankVelocity = 1600;
+    private static final int bankVelocity = 1350;
     private static final int farVelocity = 1900;
     private static final int maxVelocity = 2200;
+    
 
 
 
@@ -149,11 +150,13 @@ public class BinaryBotsTeleop extends LinearOpMode {
         boolean rb2PressedLast = gamepad2.right_bumper;
         boolean y2PressedLast = gamepad2.y;
         boolean shooterStart = false;
+        boolean intakeStart = false;
         boolean aStart = false;
         boolean b2pressedLast = gamepad2.b;
         boolean a2PressedLast = gamepad2.a;
         boolean fStart = false;
         boolean lb2PressedLast = gamepad2.left_bumper;
+        boolean b1PressedLast = gamepad1.b;
         double leftY = gamepad1.left_stick_y;
         double leftX = -gamepad1.left_stick_x;
         double rightX = gamepad1.right_stick_x;
@@ -177,7 +180,7 @@ public class BinaryBotsTeleop extends LinearOpMode {
             double shooterMultiplier = shooterSlow ? 0.7 : 0.9;
             md.MoveRobot(leftY, leftX, rightX, speedMultiplier);
             telemetry.addData("current speed", speedMultiplier);
-            telemetry.addData("shooter speed", shooterVelocity);
+            telemetry.addData("Shooter Velocity", ((DcMotorEx) hc.shooter).getVelocity());
             telemetry.update();
             if (gamepad2.right_bumper && !rb2PressedLast) {
                 shooterVelocity = bankVelocity;
@@ -197,7 +200,7 @@ public class BinaryBotsTeleop extends LinearOpMode {
             lb2PressedLast = gamepad2.right_bumper;
             y2PressedLast = gamepad2.y;
             if (shooterStart) {
-                ((DcMotorEx) hc.shooter).setVelocity(-shooterVelocity);
+                ((DcMotorEx) hc.shooter).setVelocity(shooterVelocity);
             }else{
                 hc.shooter.setPower(0);
             }
@@ -218,6 +221,16 @@ public class BinaryBotsTeleop extends LinearOpMode {
                 hc.feeder.setPower(-1);
             }else{
                 hc.feeder.setPower(0);
+//                b1PressedLast = gamepad1.b;
+//                if (gamepad1.b && !b1PressedLast) {
+//                    intakeStart = ! intakeStart;
+//
+//                }
+//                if(intakeStart){
+//                    hc.intake.setPower(-1);
+//                }else{
+//                    hc.intake.setPower(0);
+//                }
             }
         }
             telemetry.update();

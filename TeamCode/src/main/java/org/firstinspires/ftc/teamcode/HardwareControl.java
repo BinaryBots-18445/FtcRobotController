@@ -66,11 +66,11 @@ public class HardwareControl {
     // E is basically strife driving + eventual other things probably
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
-
     protected DcMotorEx frontleft = null;
     protected DcMotorEx frontright = null;
     protected DcMotorEx backleft = null;
     protected DcMotorEx backright = null;
+//    protected DcMotorEx intake = null;
     protected DcMotor shooter = null;
     protected CRServo agitator = null;
     protected DcMotor feeder = null;
@@ -103,6 +103,7 @@ public class HardwareControl {
         backleft = opMode.hardwareMap.get(DcMotorEx.class, "backleft");
         backright = opMode.hardwareMap.get(DcMotorEx.class, "backright");
         shooter = opMode.hardwareMap.get(DcMotorEx.class, "shooter");
+//        intake = opMode.hardwareMap.get(DcMotorEx.class, "intake");
         agitator = opMode.hardwareMap.get(CRServo.class, "agitator");
         feeder = opMode.hardwareMap.get(DcMotorEx.class, "feeder");
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
@@ -112,6 +113,7 @@ public class HardwareControl {
         frontright.setDirection(DcMotor.Direction.FORWARD);
         backleft.setDirection(DcMotor.Direction.FORWARD);
         backright.setDirection(DcMotor.Direction.REVERSE);
+        shooter.setDirection(DcMotor.Direction.REVERSE);
 
         frontleft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         frontright.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -130,6 +132,8 @@ public class HardwareControl {
         backright.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         shooter.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         feeder.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        intake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         // Send telemetry message to indicate successful Encoder reset
         opMode.telemetry.addData(
                 "Starting position",
