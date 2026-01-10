@@ -21,8 +21,8 @@ public class RedFarAuto extends LinearOpMode {
             {
                 for (int i = 0; i < 3; i++) {
 
-                    ((DcMotorEx) hc.shooter).setVelocity(1350);
-                    sleep(3000);
+                    ((DcMotorEx) hc.shooter).setVelocity(1850);
+                    sleep(4500);
                     hc.agitator.setPower(1);
                     hc.feeder.setPower(-1);
                     sleep(1250);
